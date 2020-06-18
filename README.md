@@ -2,7 +2,7 @@ This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory
 
  
 # import all files  from directory:
-	python app.py --mode all --path data/ --dest mongodb://127.0.0.1:57017/admin
+	python app.py --mode all --path data/ --timeshift 100_years_ago --dest mongodb://127.0.0.1:57017/admin
 	
 # Simulate 5min activity:
 	python app.py --mode simulate --freq 5min --dest mongodb://127.0.0.1:57017/admin		
