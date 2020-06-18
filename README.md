@@ -69,12 +69,15 @@ optional arguments:
                         
   -f FREQ, --freq FREQ 
    
-   cron freq for simulating ex: 5min 12h 1M
+        cron freq for simulating ex: 5min 12h 1M
   
   -t TIMESHIFT, --timeshift TIMESHIFT
-                        import only records for this period: `1 day ago`, `1
-                        hours ago`, `1 year ago`...
-                        default = `100 years ago`
+
+        import only records for specified  period, 
+        ex: `2 minutes ago`, `1 day ago`, `1 hours ago`, `1 year ago`...                        
+        default = `100 years ago`
+        see [dateparser relative dates ](https://dateparser.readthedocs.io/en/latest/#relative-dates ) for details
+        see [dateparser relative dates ]: https://dateparser.readthedocs.io/en/latest/#relative-dates  for details
 
 # Available freq
     Alias	Description
