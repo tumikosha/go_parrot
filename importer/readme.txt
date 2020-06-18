@@ -21,8 +21,12 @@ cron service scans `data/` every 5min and try to import only records with
     where  TIME_DELTA- configurable parameter (1 sec by default)
             max(updated_at) - calculated from db
 
-
+# In event based systems, the order of events may be disturbed in a small range (1 min?)
+# this parameter solves this problem
+# If it is not 0 it usually captures 1 (or few) last record, and tried to replace them in the database.
+# see config.py TIME_DELTA
 ----------------------------------------------------------------
+
 optional arguments:
   -h, --help            show this help message and exit
   -d DEST, --dest DEST  mongodb URI like
