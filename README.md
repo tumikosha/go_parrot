@@ -3,6 +3,7 @@ This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory
  
 # import all files  from directory:
     python app.py --mode all
+    python app.py --timeshift January_12,_2012_10:00
 	python app.py --mode all --path data/ --timeshift 100_years_ago --dest mongodb://127.0.0.1:57017/admin
 	
 # Simulate 5min activity:
@@ -75,7 +76,8 @@ optional arguments:
   -t TIMESHIFT, --timeshift TIMESHIFT
 
         import only records for specified  period, 
-        ex: `2_minutes_ago`, `1_day_ago`, `1_hours_ago`, `1_year_ago`...                        
+        ex: `2_minutes_ago`, `1_day_ago`, `1_hours_ago`, `1_year_ago`...
+            `January_12,_2012_10:00`                        
         default = `100_years_ago`
         ex: python app.py --timeshift 2_years_ago
         see [dateparser relative dates ](https://dateparser.readthedocs.io/en/latest/#relative-dates ) for details
