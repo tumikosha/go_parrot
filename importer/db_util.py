@@ -22,7 +22,7 @@ def create_zlib_collection(xdb, name):
 
 
 def ensure_index(xdb, collection, field, direction):
-	print('[X]creating index: twitter_tags.created_at')
+	print('[X]creating index:',collection, field, direction)
 	try:
 		response = xdb[collection].create_index([(field, direction)])
 		print(response)
@@ -41,8 +41,8 @@ def prepare_database():
 	create_zlib_collection(db, "users")
 	ensure_index(db, 'orders', 'created_at', pymongo.ASCENDING)
 	ensure_index(db, 'orders', 'created_at', pymongo.DESCENDING)
-	ensure_index(db, 'users', 'created_at', pymongo.ASCENDING)
-	ensure_index(db, 'users', 'updated_at', pymongo.ASCENDING)
+	ensure_index(db, 'customers', 'created_at', pymongo.ASCENDING)
+	ensure_index(db, 'customers', 'updated_at', pymongo.ASCENDING)
 	return client, db
 
 
