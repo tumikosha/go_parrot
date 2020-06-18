@@ -35,6 +35,7 @@ cron service scans `data/` every 5min and try to import only records with
 In event based systems, the order of events may be disturbed in a small range (1 min?)
 
 TIME_DELTA parameter solves this problem
+
 in code it looks like:
 ```
     filter = (df['updated_at'] > (start_moment - config.TIME_DELTA)) & (df['updated_at'] <= end_moment) 
