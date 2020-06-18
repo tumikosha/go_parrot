@@ -4,7 +4,7 @@ this script imports all files with orders/users from directory `data/`
 import all files:
 	python app.py --mode all --dest mongodb://127.0.0.1:57017/admin
 simulate 5min activity:
-	python app.py --simulate -freq 5min all --dest mongodb://127.0.0.1:57017/admin
+	python app.py --mode simulate -freq 5min  --dest mongodb://127.0.0.1:57017/admin
 run service by cron:
 	flask crontab add
 """
