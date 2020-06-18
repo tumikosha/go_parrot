@@ -8,7 +8,7 @@ db = None
 client = None
 
 # default date
-VERY_EARLY_DATE = dateparser.parse("January 1th, 1900 00:00")
+VERY_EARLY_DATE = dateparser.parse("1 January 1970")
 
 
 def create_zlib_collection(xdb, name):
@@ -156,8 +156,9 @@ def order_range_in_db(db) -> (datetime.datetime, datetime.datetime):
 
 
 def clear_database():
-	db.orders.delete_many({})  # just for tests
-	db.customers.delete_many({})  # just for tests
+	db.orders.delete_many({})  # delete all orers
+	db.customers.delete_many({})  # delete all customers/users
+	print("ATTENTION! -----======DATABASE ERASED====-------")
 
 
 def digest():
