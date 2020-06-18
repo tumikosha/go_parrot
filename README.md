@@ -42,7 +42,6 @@ in code it looks like:
     mask = (df['updated_at'] > (start_moment - config.TIME_DELTA)) & (df['updated_at'] <= end_moment)
     batch = df.loc[mask] # records filtered to window 
 ```
-If it is not 0 it usually captures 1 (or few) last record, and tried to replace them in the database.
 
  see TIME_DELTA in config.py 
  
