@@ -1,3 +1,3 @@
 docker-compose build
-docker-compose run client
-echo goooo
+docker-compose run importer
+echo Done
