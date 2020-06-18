@@ -1,17 +1,26 @@
 # go_parrot
 This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory `data/`
+
 import all files:
+
 	python app.py --mode all -path data/ --dest mongodb://127.0.0.1:57017/admin
+	
 simulate 5min activity:
+
 	python app.py --simulate -freq 5min all --dest mongodb://127.0.0.1:57017/admin
+	
 run service by cron:
+
 	flask crontab add
 
 NOTE: Simulatiom mode erases DB before run
 
-------------Requirements------------------
+# Requirements 
+
 Anaconda / Python 3.7.4
+
 Mongodb 4  on port 57017 is required and started in docker container in `run.sh`
+
 App creates database `go_parrot`
     `go_parrot.order` - table/collection with orders
     `go_parrot.customers`  - table/collection with users
