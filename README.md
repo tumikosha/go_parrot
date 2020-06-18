@@ -2,6 +2,7 @@ This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory
 
  
 ![alt text](https://github.com/tumikosha/go_parrot/blob/master/DOCS/html/images/import_process.png)
+![alt text](https://github.com/tumikosha/go_parrot/blob/master/DOCS/html/images/Entity_Relationship_Diagram1.png?raw=true)
 # import all files  from directory:
 	python app.py --mode all --path data/ --dest mongodb://127.0.0.1:57017/admin
 	
