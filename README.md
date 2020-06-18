@@ -13,50 +13,7 @@ This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory
     cd importer
 	flask crontab add
 
-# Requirements
-Anaconda / Python 3.7.4
-
-Mongodb 4  on port 57017 is required and started in docker container in `run.sh`
-
-App creates database `go_parrot`
-
-    `go_parrot.order` - table/collection with orders
-    
-    `go_parrot.customers`  - table/collection with users
-    
-    go_parrot.customers['is_empty'] = True if order refers to user without description
-    
-tables linked by fields: go_parrot.order['user_id'] ----> go_parrot.customers['_id']
-
-
-cron service scans `data/` every 5min and try to import only records with
-
-    `updated_at` > max(updated_at) - TIME_DELTA
-    
-    where  TIME_DELTA- configurable parameter (0 sec by default)
-    
-            max(updated_at) - calculated from db
-
-In event based systems, the order of events may be disturbed in a small range (1 min?)
-
-TIME_DELTA parameter solves this problem
-
-in code it looks like:
-```
-    mask = (df['updated_at'] > (start_moment - config.TIME_DELTA)) & (df['updated_at'] <= end_moment)
-    batch = df.loc[mask] # records filtered to window 
-```
-
- see TIME_DELTA in config.py
- ```diff
-+ I recommend to use TIME_DELTA = "24 hours ago" to be extra safe
-    or you can just import all files one time a day
-``` 
-
- 
-----------------------------------------------------------------
-
-optional arguments:
+# Optional arguments:
 
   -h, --help            show this help message and exit
   
@@ -118,7 +75,51 @@ optional arguments:
     U, us	microseconds
     N	nanoseconds
 
+
 # Diagrams    
 ![alt text](https://github.com/tumikosha/go_parrot/blob/master/DOCS/html/images/import_process.png)
     
 ![alt text](https://github.com/tumikosha/go_parrot/blob/master/DOCS/html/images/Entity_Relationship_Diagram1.png?raw=true)
+
+# Requirements
+Anaconda / Python 3.7.4
+
+Mongodb 4  on port 57017 is required and started in docker container in `run.sh`
+
+App creates database `go_parrot`
+
+    `go_parrot.order` - table/collection with orders
+    
+    `go_parrot.customers`  - table/collection with users
+    
+    go_parrot.customers['is_empty'] = True if order refers to user without description
+    
+tables linked by fields: go_parrot.order['user_id'] ----> go_parrot.customers['_id']
+
+
+cron service scans `data/` every 5min and try to import only records with
+
+    `updated_at` > max(updated_at) - TIME_DELTA
+    
+    where  TIME_DELTA- configurable parameter (0 sec by default)
+    
+            max(updated_at) - calculated from db
+
+In event based systems, the order of events may be disturbed in a small range (1 min?)
+
+TIME_DELTA parameter solves this problem
+
+in code it looks like:
+```
+    mask = (df['updated_at'] > (start_moment - config.TIME_DELTA)) & (df['updated_at'] <= end_moment)
+    batch = df.loc[mask] # records filtered to window 
+```
+
+ see TIME_DELTA in config.py
+ ```diff
++ I recommend to use TIME_DELTA = "24 hours ago" to be extra safe
+    or you can just import all files one time a day
+``` 
+
+ 
+----------------------------------------------------------------
