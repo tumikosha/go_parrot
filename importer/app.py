@@ -4,7 +4,7 @@ this script imports all files with orders/users from directory `data/`
 import all files:
 	python app.py --mode all --dest mongodb://127.0.0.1:57017/admin
 simulate 5min activity:
-	python app.py --simulate -freq 12h all --dest mongodb://127.0.0.1:57017/admin
+	python app.py --simulate -freq 5min all --dest mongodb://127.0.0.1:57017/admin
 run service by cron:
 	flask crontab add
 """
@@ -20,7 +20,6 @@ import config
 import db_util
 
 # configure logger
-# create logger with 'spam_application'
 logger = logging.getLogger('import_app')
 logger.setLevel(logging.INFO)
 # create file handler which logs even debug messages
@@ -42,6 +41,7 @@ app = Flask(__name__)
 crontab = Crontab(app)  # Flask crontab
 
 VERY_EARLY_DATE = db_util.VERY_EARLY_DATE  # dateparser.parse("January 1th, 1973 00:00")
+# column types for csv files
 USERS_DTYPES = {'user_id': 'S', 'phone_number': 'S', \
 				'created_at': 'S', 'updated_at': 'S'}
 
@@ -51,8 +51,9 @@ USERS_DTYPES = {'user_id': 'S', 'phone_number': 'S', \
 def scheduled_job(  # start_moment=dateparser.parse('5 min ago'),
 		end_moment=datetime.datetime.now()):
 	"""
-	# :param start_moment:  moment  for start slice
-	:param end_moment:  moment  for end slice
+	scan dir `data/` for orders / users for specified period
+	# :param start_moment:  moment  for start of period
+	:param end_moment:  moment  for end of period
 	:return: None
 	"""
 	print("\n --------------------------------------------------------")
@@ -76,40 +77,26 @@ def scheduled_job(  # start_moment=dateparser.parse('5 min ago'),
 
 
 def csv_2_df(path, dtype=None):
+	"""load csv to pandas dataframe """
 	f = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d %H:%M:%S')
 	df_ = pd.read_csv(path, date_parser=f, dtype=dtype,
 					  parse_dates=['created_at', 'updated_at'])
 	return df_
 
 
-# def order_range_in_db(db) -> (datetime.datetime, datetime.datetime):
-# 	""" maximal and minimal date of order in db
-# 		return: (min_date, max_date)
-# 	"""
-# 	if db.orders.count_documents({}) == 0:
-# 		return VERY_EARLY_DATE, VERY_EARLY_DATE
-# 	first_order = db.orders.find_one({}, sort=[('updated_at', pymongo.ASCENDING)])
-# 	last_order = db.orders.find_one({}, sort=[('updated_at', pymongo.DESCENDING)])
-# 	return first_order['updated_at'], last_order['updated_at']
-#
-#
-# def customer_range_in_db(db) -> (datetime.datetime, datetime.datetime):
-# 	""" maximal and minimal date of customer in db
-# 		return: (min_date, max_date)
-# 	"""
-# 	if db.orders.count_documents({}) == 0:
-# 		return VERY_EARLY_DATE, VERY_EARLY_DATE
-# 	first_customer = db.customers.find_one({}, sort=[('updated_at', pymongo.ASCENDING)])
-# 	last_customer = db.customers.find_one({}, sort=[('updated_at', pymongo.DESCENDING)])
-# 	return first_customer['updated_at'], last_customer['updated_at']
-
-
 def process_orders_file(path, file, start_moment=VERY_EARLY_DATE, end_moment=datetime.datetime.now()):
+	"""
+	load orders from file, filter it for period and write to mongodb table
+	:param path: `data/` by default
+	:param file:
+	:param start_moment: for filtering
+	:param end_moment: for filtering
+	:return:
+	"""
 	df_orders = pd.read_csv(path + "/" + file, dtype={'user_id': 'S'})
 	df_orders['updated_at'] = pd.to_datetime(df_orders['updated_at'])
 	df = df_orders.copy(deep=True).sort_values(by=['updated_at'])
 	df['updated_at'] = pd.to_datetime(df['updated_at'])
-	# end_moment = datetime.datetime.now()
 	# select only orders in period from start_date till now
 	# mask = (df['created_at'] > start_moment) & (df['created_at'] <= end_moment)  # TODO <=
 	mask = (df['updated_at'] > (start_moment - config.TIME_DELTA)) & (df['updated_at'] <= end_moment)  # TODO <=
@@ -128,13 +115,29 @@ def process_orders_file(path, file, start_moment=VERY_EARLY_DATE, end_moment=dat
 
 
 def process_all_order_files(dir, start_moment=VERY_EARLY_DATE, end_moment=datetime.datetime.now()):
-	"""process all files, but save only orders with `updated_at` > start_date """
+	"""
+	VERY_EARLY_DATE = `1900, 1 Jan` - default datetime
+	process all files, filter:  `updated_at` > start_date
+	:param dir:
+	:param start_moment:
+	:param end_moment:
+	:return:
+	"""
+
 	order_files = [f for f in os.listdir(dir) if f.startswith('orders')]
 	for file in order_files:
 		process_orders_file(dir, file, start_moment=start_moment, end_moment=end_moment)
 
 
 def process_user_file(path, file, start_moment=VERY_EARLY_DATE, end_moment=datetime.datetime.now()):
+	"""
+	load user info from file, filter it for period and write to mongodb table `customers`
+	:param path: `data/` by default
+	:param file:
+	:param start_moment:
+	:param end_moment:
+	:return:
+	"""
 	# user_df = pd.read_csv(path + "/" + file, dtype=USERS_DTYPES)
 	user_df = csv_2_df(path + "/" + file, dtype=USERS_DTYPES)
 	user_df['updated_at'] = pd.to_datetime(user_df['updated_at'])
@@ -156,6 +159,13 @@ def process_user_file(path, file, start_moment=VERY_EARLY_DATE, end_moment=datet
 
 
 def process_all_user_files(dir, start_moment=VERY_EARLY_DATE, end_moment=datetime.datetime.now()):
+	"""
+	 Loads all users from all files in dir, filter it for period and write to mongodb table `customers`
+	:param dir:
+	:param start_moment:
+	:param end_moment:
+	:return:
+	"""
 	order_files = [f for f in os.listdir(dir) if f.startswith('user')]
 	for file in order_files:
 		try:
@@ -180,7 +190,7 @@ if __name__ == '__main__':
 
 	client, db = db_util.prepare_database()
 	# db.orders.delete_many({})  # just for tests
-	if args.mode == "all":
+	if args.mode == "all":  # just import all from all files in dir: `data/`
 		db_util.info()
 		# db_util.clear_database()
 		print("Trying to import all files from dir:", args.path)
@@ -189,8 +199,9 @@ if __name__ == '__main__':
 		db_util.info()
 		sys.exit()
 
-	if args.mode == "simulate":
+	if args.mode == "simulate":  # simulte cronjob mode
 		print("trying to simulate all files from dir", args.path)
+		# ATTENTION !!! remove all data from orders and customer tables
 		db_util.clear_database()
 		db_util.info()
 		now = datetime.datetime.now()

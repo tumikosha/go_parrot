@@ -7,11 +7,12 @@ import datetime, dateparser
 db = None
 client = None
 
+# default date
 VERY_EARLY_DATE = dateparser.parse("January 1th, 1900 00:00")
 
 
-
 def create_zlib_collection(xdb, name):
+	"""makes mongodb collection in ZIPPED MODE"""
 	print('[X]creating collection: ', xdb, name)
 	try:
 		xdb.create_collection(name,
@@ -22,7 +23,8 @@ def create_zlib_collection(xdb, name):
 
 
 def ensure_index(xdb, collection, field, direction):
-	print('[X]creating index:',collection, field, direction)
+	"""create index if it is not exists"""
+	print('[X]creating index:', collection, field, direction)
 	try:
 		response = xdb[collection].create_index([(field, direction)])
 		print(response)
@@ -31,6 +33,10 @@ def ensure_index(xdb, collection, field, direction):
 
 
 def prepare_database():
+	""" singletone
+	makes database connection
+	:return: (client, database)
+	"""
 	global db, client
 	if client is not None:
 		return client, db
@@ -81,6 +87,7 @@ STATUS_SKIPPED = 2
 
 
 def mention_user(user_id):
+	"""if user found only in order file 'is_empty': True"""
 	try:
 		# insert user mentioned in order but without first_name and other fields
 		db.customers.insert_one({'_id': user_id, 'user_id': user_id, 'updated_at': VERY_EARLY_DATE, 'is_empty': True})
@@ -89,7 +96,11 @@ def mention_user(user_id):
 
 
 def update_order(order):
-	"""  check if it is fresh order and write it to db"""
+	"""
+	Check if it is a fresh order and write it to db
+	:param order: dictionary with fields
+	:return: STATUS_INSERTED | STATUS_REPLACED | STATUS_SKIPPED
+	"""
 	order['_id'] = order['id']
 	old_order = db.orders.find_one({'_id': order['id']})
 	mention_user(order['user_id'])
@@ -105,8 +116,13 @@ def update_order(order):
 
 
 def update_user(user):
+	"""
+	check if it is fresh order and write it to db
+	:param user: dictionary with fields
+	:return: STATUS_INSERTED | STATUS_REPLACED | STATUS_SKIPPED
+	"""
 	global db
-	"""  check if it is fresh order and write it to db"""
+
 	# db.customers.insert_one(order)
 	user['_id'] = user['user_id']
 	user['is_empty'] = False
@@ -174,7 +190,8 @@ def customer_range_in_db(db) -> (datetime.datetime, datetime.datetime):
 
 
 def info():
-	print("----------------")
+	"""show database digest"""
+	print("----------------mongodb digest----------------")
 	total_orders = db.orders.count_documents({})
 	total_customers = db.customers.count_documents({})
 	# total_empty = db.customers.count_documents({'first_name': {"$exists": False}})
@@ -186,5 +203,5 @@ def info():
 	print("order range:", first_dt, " --->", last_dt)
 	customer_first_dt, customer_last_dt = customer_range_in_db(db)
 	print("customer range:", customer_first_dt, " --->", customer_last_dt)
-	print("----------------")
+	print("-------------------------------")
 	return total_orders, total_customers, total_empty
