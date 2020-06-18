@@ -28,7 +28,7 @@ cron service scans `data/` every 5min and try to import only records with
 
     `updated_at` > max(updated_at) - TIME_DELTA
     
-    where  TIME_DELTA- configurable parameter (1 sec by default)
+    where  TIME_DELTA- configurable parameter (0 sec by default)
     
             max(updated_at) - calculated from db
 
