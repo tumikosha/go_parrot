@@ -142,7 +142,8 @@ def process_user_file(path, file, start_moment=VERY_EARLY_DATE, end_moment=datet
 	user_df = csv_2_df(path + "/" + file, dtype=USERS_DTYPES)
 	user_df['updated_at'] = pd.to_datetime(user_df['updated_at'])
 	user_df['updated_at'] = pd.to_datetime(user_df['updated_at'])
-	mask = (user_df['updated_at'] >  (start_moment - config.TIME_DELTA)) & (user_df['updated_at'] <= end_moment)  # TODO <=
+	mask = (user_df['updated_at'] > (start_moment - config.TIME_DELTA)) & (
+				user_df['updated_at'] <= end_moment)  # TODO <=
 	batch = user_df.loc[mask]
 	# TODO slicing
 	# with tqdm.tqdm(total=len(user_df), desc=file) as pbar:
@@ -171,7 +172,7 @@ def process_all_user_files(dir, start_moment=VERY_EARLY_DATE, end_moment=datetim
 		try:
 			process_user_file(dir, file, start_moment=start_moment, end_moment=end_moment)
 		except Exception as e:
-			logger.error("File "+file+" :::>"+str(e))
+			logger.error("File " + file + " :::>" + str(e))
 
 
 if __name__ == '__main__':
@@ -184,9 +185,9 @@ if __name__ == '__main__':
 						default='all')
 	parser.add_argument('-f', '--freq', type=str, help="cron freq for simulating ex: 5min 12h 1M",
 						default="12h")
-	parser.add_argument('-t', '--timeshift', type=str, help="import only records for this period: `1 day ago`, `1 hours ago`, `1 year ago`...",
+	parser.add_argument('-t', '--timeshift', type=str,
+						help="import only records for this period: `1 day ago`, `1 hours ago`, `1 year ago`...",
 						default="100 years ago")
-
 
 	args = parser.parse_args()
 	config.MONGO_URI = args.dest
@@ -196,9 +197,10 @@ if __name__ == '__main__':
 	if args.mode == "all":  # just import all from all files in dir: `data/`
 		db_util.info()
 		# db_util.clear_database()
+		time_shift = args.timeshift.replace("_", " ")
 		print("Trying to import all files from dir:", args.path)
-		process_all_order_files(args.path, start_moment=dateparser.parse(args.timeshift))
-		process_all_user_files(args.path, start_moment=dateparser.parse(args.timeshift))
+		process_all_order_files(args.path, start_moment=dateparser.parse(time_shift))
+		process_all_user_files(args.path, start_moment=dateparser.parse(time_shift))
 		db_util.info()
 		sys.exit()
 

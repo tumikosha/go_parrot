@@ -74,8 +74,9 @@ optional arguments:
   -t TIMESHIFT, --timeshift TIMESHIFT
 
         import only records for specified  period, 
-        ex: `2 minutes ago`, `1 day ago`, `1 hours ago`, `1 year ago`...                        
-        default = `100 years ago`
+        ex: `2_minutes_ago`, `1_day_ago`, `1_hours_ago`, `1_year_ago`...                        
+        default = `100_years_ago`
+        ex: python app.py --timeshift 2_years_ago
         see [dateparser relative dates ](https://dateparser.readthedocs.io/en/latest/#relative-dates ) for details
         see [dateparser relative dates ]: https://dateparser.readthedocs.io/en/latest/#relative-dates  for details
 
