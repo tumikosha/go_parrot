@@ -22,14 +22,17 @@ This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory
   -d DEST, --dest DEST
     
     mongodb URI like   mongodb://db_name:password@ip:port/admin
+    example: python app.py --dest mongodb://127.0.0.1:57017/admin
                         
   -p PATH, --path PATH 
    
     path to dir with files
+    default: `data/`
   
   -m {all,simulate},    --mode {all,simulate}
   
     import all files or simulate
+    defaul: 'all`
                         
   -s START, --start START
   
@@ -37,6 +40,7 @@ This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory
         `1 hours ago`, `1_year_and_1_month_ago`, ...
         default = `100_years_ago`
         ex: python app.py --start 2_years_ago
+                
   -e END, --end END   
   
         end of period: 1_day_ago`, `1_january_2020`, `1 year ago`...
