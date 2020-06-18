@@ -181,9 +181,12 @@ if __name__ == '__main__':
 	parser.add_argument('-p', "--path", type=str, default='data/',
 						help="path to dir with files")
 	parser.add_argument('-m', '--mode', type=str, choices=['all', 'simulate'], help="import all files or simulate",
-						default='simulate')
+						default='all')
 	parser.add_argument('-f', '--freq', type=str, help="cron freq for simulating ex: 5min 12h 1M",
 						default="12h")
+	parser.add_argument('-t', '--timeshift', type=str, help="import only records for this period: `1 day ago`, `1 hours ago`, `1 year ago`...",
+						default="100 years ago")
+
 
 	args = parser.parse_args()
 	config.MONGO_URI = args.dest
@@ -194,8 +197,8 @@ if __name__ == '__main__':
 		db_util.info()
 		# db_util.clear_database()
 		print("Trying to import all files from dir:", args.path)
-		process_all_order_files(args.path)
-		process_all_user_files(args.path)
+		process_all_order_files(args.path, start_moment=dateparser.parse(args.timeshift))
+		process_all_user_files(args.path, start_moment=dateparser.parse(args.timeshift))
 		db_util.info()
 		sys.exit()
 

@@ -48,6 +48,7 @@ in code it looks like:
  see TIME_DELTA in config.py
  ```diff
 + I recommend to use TIME_DELTA = "24 hours ago" to be extra safe
+    or you can just import all files one time a day
 ``` 
 
  
@@ -70,6 +71,10 @@ optional arguments:
    
    cron freq for simulating ex: 5min 12h 1M
   
+  -t TIMESHIFT, --timeshift TIMESHIFT
+                        import only records for this period: `1 day ago`, `1
+                        hours ago`, `1 year ago`...
+                        default = `100 years ago`
 
 # Available freq
     Alias	Description

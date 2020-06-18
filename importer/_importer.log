@@ -3912,3 +3912,5 @@
 2020-06-18 21:51:39,032 - import_app - INFO - customers imported: 0
 2020-06-18 21:51:39,032 - import_app - INFO - empty added: 0
 2020-06-18 21:51:39,033 - import_app - INFO - flask cronjob ended
+2020-06-18 22:11:05,812 - import_app - INFO - [x] Flask importer app runned
+2020-06-18 22:13:21,235 - import_app - INFO - [x] Flask importer app runned
