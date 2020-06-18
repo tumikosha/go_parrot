@@ -181,7 +181,7 @@ if __name__ == '__main__':
 	parser.add_argument('-p', "--path", type=str, default='data/',
 						help="path to dir with files")
 	parser.add_argument('-m', '--mode', type=str, choices=['all', 'simulate'], help="import all files or simulate",
-						default='all')
+						default='simulate')
 	parser.add_argument('-f', '--freq', type=str, help="cron freq for simulating ex: 5min 12h 1M",
 						default="12h")
 
@@ -208,7 +208,7 @@ if __name__ == '__main__':
 		begin = dateparser.parse("January 1th, 2020 00:00")
 		sim_range = pd.date_range(start=begin, end=now, freq=args.freq)
 		# sim_range = pd.date_range(start=begin, end=now, freq="5min")
-		good, bad = 0, 0
+		# good, bad = 0, 0
 		with tqdm.tqdm(total=len(sim_range), desc="simulating time ") as pbar:
 			for idx in range(len(sim_range)):
 				moment = sim_range[idx]

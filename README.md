@@ -45,8 +45,11 @@ in code it looks like:
     batch = df.loc[mask] # records filtered to window 
 ```
 
- see TIME_DELTA in config.py 
- 
+ see TIME_DELTA in config.py
+ ```diff
++ I recommend to use TIME_DELTA = "24 hours ago" to be extra safe
+``` 
+
  
 ----------------------------------------------------------------
 
