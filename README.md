@@ -38,7 +38,7 @@ TIME_DELTA parameter solves this problem
 
 in code it looks like:
 ```
-    filter = (df['updated_at'] > (start_moment - config.TIME_DELTA)) & (df['updated_at'] <= end_moment) 
+    filter_window = (df['updated_at'] > (start_moment - config.TIME_DELTA)) & (df['updated_at'] <= end_moment) 
 ```
 If it is not 0 it usually captures 1 (or few) last record, and tried to replace them in the database.
 
