@@ -22,7 +22,8 @@ App creates database `go_parrot`
     
     go_parrot.customers['is_empty'] = True if order refers to user without description
     
-tables `related` by go_parrot.order[user_id] -> go_parrot.customers[_id]
+tables linked by fields: go_parrot.order['user_id'] ----> go_parrot.customers['_id']
+
 
 cron service scans `data/` every 5min and try to import only records with
 
