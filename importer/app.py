@@ -185,9 +185,13 @@ if __name__ == '__main__':
 						default='all')
 	parser.add_argument('-f', '--freq', type=str, help="cron freq for simulating ex: 5min 12h 1M",
 						default="12h")
-	parser.add_argument('-t', '--timeshift', type=str,
-						help="import only records for this period: `1 day ago`, `1 hours ago`, `1 year ago`...",
+	parser.add_argument('-s', '--start', type=str,
+						help="start date for import period: `1 day ago`, `1 hours ago`, `1 year ago`...",
 						default="100 years ago")
+	parser.add_argument('-e', '--end', type=str,
+						help="end of period: 1_day_ago`, `1_january_2020`, `1 year ago`...",
+						default="1 day in")
+
 
 	args = parser.parse_args()
 	config.MONGO_URI = args.dest
@@ -197,10 +201,10 @@ if __name__ == '__main__':
 	if args.mode == "all":  # just import all from all files in dir: `data/`
 		db_util.info()
 		# db_util.clear_database()
-		time_shift = args.timeshift.replace("_", " ")
+		start, end  = args.start.replace("_", " "), args.end.replace("_", " ")
 		print("Trying to import all files from dir:", args.path)
-		process_all_order_files(args.path, start_moment=dateparser.parse(time_shift))
-		process_all_user_files(args.path, start_moment=dateparser.parse(time_shift))
+		process_all_order_files(args.path, start_moment=dateparser.parse(start), end_moment=dateparser.parse(end))
+		process_all_user_files(args.path, start_moment=dateparser.parse(start), end_moment=dateparser.parse(end))
 		db_util.info()
 		sys.exit()
 

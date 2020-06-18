@@ -3,8 +3,8 @@ This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory
  
 # import all files  from directory:
     python app.py --mode all
-    python app.py --timeshift January_12,_2012_10:00
-	python app.py --mode all --path data/ --timeshift 100_years_ago --dest mongodb://127.0.0.1:57017/admin
+    python app.py --start January_12,_2012_10:00   --end January_1,_2020_10:00 
+	python app.py --mode all --path data/ --start 100_years_ago --end tomorrow --dest mongodb://127.0.0.1:57017/admin
 	
 # Simulate 5min activity:
 	python app.py --mode simulate --freq 5min --dest mongodb://127.0.0.1:57017/admin		
@@ -72,14 +72,16 @@ optional arguments:
   -f FREQ, --freq FREQ 
    
         cron freq for simulating ex: 5min 12h 1M
+  -s START, --start START
   
-  -t TIMESHIFT, --timeshift TIMESHIFT
-
-        import only records for specified  period, 
-        ex: `2_minutes_ago`, `1_day_ago`, `1_hours_ago`, `1_year_ago`...
-            `January_12,_2012_10:00`                        
-        default = `100_years_ago`
-        ex: python app.py --timeshift 2_years_ago
+                        start date for import period: `1 day ago`, `1_january_2020`
+                         `1 hours ago`, `1_year_and_1_month_ago`, ...
+                         default = `100_years_ago`
+                         ex: python app.py --start 2_years_ago
+  -e END, --end END   
+        end of period: 1_day_ago`, `1_january_2020`, `1 year ago`...
+        default = `1_day_in`
+        ex: python app.py --start 2_years_ago  --end tomorrow        
         see [dateparser relative dates ](https://dateparser.readthedocs.io/en/latest/#relative-dates ) for details
         see [dateparser relative dates ]: https://dateparser.readthedocs.io/en/latest/#relative-dates  for details
 
