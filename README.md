@@ -1,4 +1,5 @@
 This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory `data/`
+This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory `data/`
 
  
 # import all files  from directory:
@@ -29,7 +30,7 @@ This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory
 ```
   -db DB_NAME
                                 
-    name of the database on mongo instanse specified in --dest
+    name of the database on mongo instance specified in --dest
     default: `go_parrot`
   
   -m {all,simulate},    --mode {all,simulate}
