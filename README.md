@@ -98,6 +98,6 @@ optional arguments:
     N	nanoseconds
 
 # Diagrams    
-    ![alt text](https://github.com/tumikosha/go_parrot/blob/master/DOCS/html/images/import_process.png)
+![alt text](https://github.com/tumikosha/go_parrot/blob/master/DOCS/html/images/import_process.png)
     
-    ![alt text](https://github.com/tumikosha/go_parrot/blob/master/DOCS/html/images/Entity_Relationship_Diagram1.png?raw=true)
+![alt text](https://github.com/tumikosha/go_parrot/blob/master/DOCS/html/images/Entity_Relationship_Diagram1.png?raw=true)
