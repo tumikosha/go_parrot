@@ -8,6 +8,7 @@ This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory
 	python app.py --mode simulate --freq 5min --dest mongodb://127.0.0.1:57017/admin		
 	
 # Run service by cron:
+    cd importer
 	flask crontab add
 
 # Requirements
