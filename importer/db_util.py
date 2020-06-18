@@ -42,7 +42,7 @@ def prepare_database():
 		return client, db
 
 	client = pymongo.MongoClient(config.MONGO_URI)
-	db = client['go_parrot']
+	db = client[config.DB_NAME]
 	create_zlib_collection(db, "orders")
 	create_zlib_collection(db, "users")
 	ensure_index(db, 'orders', 'created_at', pymongo.ASCENDING)

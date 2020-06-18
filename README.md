@@ -23,15 +23,13 @@ This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory
   
   -d DEST, --dest DEST
     
-    mongodb URI like   mongodb://db_name:password@ip:port/admin
+    mongodb URI to mongo instance, like   mongodb://db_name:password@ip:port/admin
 ```bash
         python app.py --dest mongodb://127.0.0.1:57017/admin
 ```
-                        
-  -p PATH, --path PATH 
-   
-    path to dir with files
-    default: `data/`
+  -db DB_NAME                              
+    name of the database on mongo instanse specified in --dest
+    default: `go_parrot`
   
   -m {all,simulate},    --mode {all,simulate}
   

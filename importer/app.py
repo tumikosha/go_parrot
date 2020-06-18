@@ -143,7 +143,7 @@ def process_user_file(path, file, start_moment=VERY_EARLY_DATE, end_moment=datet
 	user_df['updated_at'] = pd.to_datetime(user_df['updated_at'])
 	user_df['updated_at'] = pd.to_datetime(user_df['updated_at'])
 	mask = (user_df['updated_at'] > (start_moment - config.TIME_DELTA)) & (
-				user_df['updated_at'] <= end_moment)  # TODO <=
+			user_df['updated_at'] <= end_moment)  # TODO <=
 	batch = user_df.loc[mask]
 	# TODO slicing
 	# with tqdm.tqdm(total=len(user_df), desc=file) as pbar:
@@ -192,16 +192,20 @@ if __name__ == '__main__':
 						help="end of period: 1_day_ago`, `1_january_2020`, `1 year ago`...",
 						default="1 day in")
 
+	parser.add_argument('-db', '--db', type=str,
+						help="database name",
+						default=config.DB_NAME)
 
 	args = parser.parse_args()
 	config.MONGO_URI = args.dest
+	config.DB_NAME = args.db
 
 	client, db = db_util.prepare_database()
 	# db.orders.delete_many({})  # just for tests
 	if args.mode == "all":  # just import all from all files in dir: `data/`
 		db_util.info()
 		# db_util.clear_database()
-		start, end  = args.start.replace("_", " "), args.end.replace("_", " ")
+		start, end = args.start.replace("_", " "), args.end.replace("_", " ")
 		print("Trying to import all files from dir:", args.path)
 		process_all_order_files(args.path, start_moment=dateparser.parse(start), end_moment=dateparser.parse(end))
 		process_all_user_files(args.path, start_moment=dateparser.parse(start), end_moment=dateparser.parse(end))

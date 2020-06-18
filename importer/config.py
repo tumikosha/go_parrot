@@ -1,7 +1,10 @@
 import datetime
 import dateparser
 
+
 MONGO_URI = 'mongodb://127.0.0.1:57017/admin'
+DB_NAME = 'go_parrot'
+
 # MONGO_URI = 'mongodb://db_name:pass@127.0.0.1:57017/admin'
 
 # In event based systems, the order of events may be disturbed in a small range (1 min?)
