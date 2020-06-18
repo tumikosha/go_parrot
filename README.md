@@ -27,7 +27,8 @@ This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory
 ```bash
         python app.py --dest mongodb://127.0.0.1:57017/admin
 ```
-  -db DB_NAME                              
+  -db DB_NAME
+                                
     name of the database on mongo instanse specified in --dest
     default: `go_parrot`
   
