@@ -34,11 +34,15 @@ cron service scans `data/` every 5min and try to import only records with
 
 In event based systems, the order of events may be disturbed in a small range (1 min?)
 
-this parameter solves this problem
-
+TIME_DELTA parameter solves this problem
+in code it looks like:
+```
+    filter = (df['updated_at'] > (start_moment - config.TIME_DELTA)) & (df['updated_at'] <= end_moment) 
+```
 If it is not 0 it usually captures 1 (or few) last record, and tried to replace them in the database.
 
  see TIME_DELTA in config.py 
+ 
  
 ----------------------------------------------------------------
 
