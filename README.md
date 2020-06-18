@@ -2,9 +2,11 @@ This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory
 
  
 # import all files  from directory:
+```
     python app.py --mode all
     python app.py --start January_12,_2012_10:00   --end January_1,_2020_10:00 
-	python app.py --mode all --path data/ --start 100_years_ago --end tomorrow --dest mongodb://127.0.0.1:57017/admin
+    python app.py --mode all --path data/ --start 100_years_ago --end tomorrow --dest mongodb://127.0.0.1:57017/admin
+```
 	
 # Simulate 5min activity:
 	python app.py --mode simulate --freq 5min --dest mongodb://127.0.0.1:57017/admin		
@@ -22,7 +24,9 @@ This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory
   -d DEST, --dest DEST
     
     mongodb URI like   mongodb://db_name:password@ip:port/admin
-    example: python app.py --dest mongodb://127.0.0.1:57017/admin
+```bash
+        python app.py --dest mongodb://127.0.0.1:57017/admin
+```
                         
   -p PATH, --path PATH 
    
@@ -39,7 +43,9 @@ This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory
         start date for import period: `1 day ago`, `1_january_2020`
         `1 hours ago`, `1_year_and_1_month_ago`, ...
         default = `100_years_ago`
-        ex: python app.py --start 2_years_ago
+```python
+     python app.py --start 2_years_ago
+```
                 
   -e END, --end END   
   
