@@ -3,11 +3,12 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
 
 # Distribution / packaging
 .Python
 importer/.idea
-importer/__pycache__
+importer/__pycache__/
 
 # Spyder project settings
 .spyderproject
