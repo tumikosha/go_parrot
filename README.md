@@ -15,23 +15,28 @@ This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory
 
 # Optional arguments:
 
-  -h, --help            show this help message and exit
+  -h, --help          
+    
+    show this help message and exit
   
-  -d DEST, --dest DEST  mongodb URI like  
-                        mongodb://db_name:password@ip:port/admin
+  -d DEST, --dest DEST
+    
+    mongodb URI like   mongodb://db_name:password@ip:port/admin
                         
-  -p PATH, --path PATH  path to dir with files
+  -p PATH, --path PATH 
+   
+    path to dir with files
   
   -m {all,simulate},    --mode {all,simulate}
   
-        import all files or simulate
+    import all files or simulate
                         
   -s START, --start START
   
         start date for import period: `1 day ago`, `1_january_2020`
-         `1 hours ago`, `1_year_and_1_month_ago`, ...
-         default = `100_years_ago`
-         ex: python app.py --start 2_years_ago
+        `1 hours ago`, `1_year_and_1_month_ago`, ...
+        default = `100_years_ago`
+        ex: python app.py --start 2_years_ago
   -e END, --end END   
   
         end of period: 1_day_ago`, `1_january_2020`, `1 year ago`...
