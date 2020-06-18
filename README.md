@@ -69,23 +69,26 @@ optional arguments:
   
         import all files or simulate
                         
-  -f FREQ, --freq FREQ 
-   
-        cron freq for simulating ex: 5min 12h 1M
   -s START, --start START
   
-                        start date for import period: `1 day ago`, `1_january_2020`
-                         `1 hours ago`, `1_year_and_1_month_ago`, ...
-                         default = `100_years_ago`
-                         ex: python app.py --start 2_years_ago
+        start date for import period: `1 day ago`, `1_january_2020`
+         `1 hours ago`, `1_year_and_1_month_ago`, ...
+         default = `100_years_ago`
+         ex: python app.py --start 2_years_ago
   -e END, --end END   
+  
         end of period: 1_day_ago`, `1_january_2020`, `1 year ago`...
         default = `1_day_in`
         ex: python app.py --start 2_years_ago  --end tomorrow        
         see [dateparser relative dates ](https://dateparser.readthedocs.io/en/latest/#relative-dates ) for details
         see [dateparser relative dates ]: https://dateparser.readthedocs.io/en/latest/#relative-dates  for details
 
-# Available freq
+  -f FREQ, --freq FREQ 
+   
+        cron freq for simulating ex: 5min 12h 1M
+
+    Available freqs
+    
     Alias	Description
     B	business day frequency
     C	custom business day frequency
