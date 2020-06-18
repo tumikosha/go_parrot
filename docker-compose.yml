@@ -1,0 +1,13 @@
+version: "3"
+services:
+  db:
+    build: mongo/
+    ports:
+      - 57017:27017
+  client:
+      build: importer/
+      command: bash demo.sh
+      network_mode: host
+      depends_on:
+        - db
+

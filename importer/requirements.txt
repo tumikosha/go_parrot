@@ -1,0 +1,7 @@
+pandas
+tqdm
+flask
+flask-crontab
+pymongo
+dateparser
+argparse

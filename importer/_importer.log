@@ -1,0 +1,12 @@
+2020-06-18 11:26:44,242 - import_app - INFO - [x] Flask importer app runned
+2020-06-18 11:26:55,650 - import_app - INFO - [x] Flask importer app runned
+2020-06-18 11:26:57,166 - import_app - INFO - flask cronjob started
+2020-06-18 11:27:36,394 - import_app - INFO - [x] Flask importer app runned
+2020-06-18 11:27:37,703 - import_app - INFO - [x] Flask importer app runned
+2020-06-18 11:30:03,037 - import_app - INFO - [x] Flask importer app runned
+2020-06-18 11:30:03,048 - import_app - INFO - flask cronjob started
+2020-06-18 11:30:04,561 - import_app - INFO - orders imported: 0
+2020-06-18 11:30:04,561 - import_app - INFO - customers imported: 0
+2020-06-18 11:30:04,562 - import_app - INFO - empty added: 0
+2020-06-18 11:30:04,562 - import_app - INFO - flask cronjob ended
+2020-06-18 11:30:19,405 - import_app - INFO - [x] Flask importer app runned
