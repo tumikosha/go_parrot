@@ -14,5 +14,7 @@ importer/__pycache__/
 .spyderproject
 .spyproject
 
+*.idea
 *.log
+importer/*.log
 
