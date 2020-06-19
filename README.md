@@ -17,12 +17,13 @@ This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory
 	flask crontab add
 	
 # Run service by PM2:	
+[ [pm2.keymetrics.io](https://pm2.keymetrics.io) ]
     However, instead of cron, I recommend using the pm2 utility in combination with relative dates and avoid the flask-cron    
     This will keep control of the command line and memory and cron too
     It will allow you to forget about cron and make the task much easier.
     PM2 is a daemon process manager that will help you manage and keep your application online 24/7
     https://pm2.keymetrics.io/
-     [ [pm2.keymetrics.io](https://pm2.keymetrics.io) ]
+     
     
     pm2 start 'python app.py --mode all ' --name app --cron "*/10 * * * *"
     pm2 list
