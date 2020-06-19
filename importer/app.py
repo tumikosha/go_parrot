@@ -1,13 +1,27 @@
 # -*- coding: utf-8 -*-
+__author__ = "Veaceslav Kunitki"
+__copyright__ = "Copyright 2020. Please inform me in case of usage"
+__credits__ = ["No credits"]
+__license__ = "MIT"
+__version__ = "11.111111111"
+__maintainer__ = "Veaceslav Kuntiki"
+__email__ = "tumikosha@gmail.com"
+__status__ = "Prototype"
 """
-this script imports all files with orders/users from directory `data/`
-import all files:
-	python app.py --mode all --dest mongodb://127.0.0.1:57017/admin
-simulate 5min activity:
-	python app.py --mode simulate -freq 5min  --dest mongodb://127.0.0.1:57017/admin
-run service by cron:
-	flask crontab add
+USAGE:
+	this script imports all files with orders/users from directory `data/`
+	import all files:
+		python app.py --mode all --dest mongodb://127.0.0.1:57017/admin
+	simulate 5min activity:
+		python app.py --mode simulate -freq 5min  --dest mongodb://127.0.0.1:57017/admin
+	run service by cron:
+		flask crontab add
+	run service by PM2:
+		pm2 start "python app.py --mode all --start 1_day_ago"
+		
 """
+# TODO: rewrite with MongoDb batch operations for hi speed
+
 import logging, os
 import datetime
 import argparse
