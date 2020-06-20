@@ -87,7 +87,7 @@ def scheduled_job(  # start_moment=dateparser.parse('5 min ago'),
 		logger.info("empty added: " + str(total_empty2 - total_empty))
 
 	except Exception as e:
-		logger.error(str(e))
+		logger.error('scheduled_job: '+str(e))
 
 	logger.info('flask cronjob ended')
 
@@ -144,7 +144,7 @@ def process_orders_file(path, file, start_moment=VERY_EARLY_DATE, end_moment=dat
 				# user = resolve_user(dfu_, record['user_id'])
 				db_util.update_order(order)
 			except Exception as e:
-				logging.error(str(e))  # print a message to the log
+				logging.error('process_orders_file: '+str(e))  # print a message to the log
 			pbar.update(1)
 
 
@@ -190,7 +190,7 @@ def process_user_file(path, file, start_moment=VERY_EARLY_DATE, end_moment=datet
 				user = row.to_dict()
 				db_util.update_user(user)
 			except Exception as e:
-				logger.info(str(e))  # print a message to the log
+				logger.info('process_user_file: '+str(e))  # print a message to the log
 			pbar.update(1)
 
 
