@@ -69,7 +69,11 @@ PM2 is a daemon process manager that will help you manage and keep your applicat
 ```python
      python app.py --start 2_years_ago
 ```
-                
+         
+  --erase 
+    
+    clear database before start 
+                  
   -e END, --end END   
   
         end of period: 1_day_ago`, `1_january_2020`, `1 year ago`...

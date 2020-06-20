@@ -18,6 +18,8 @@ USAGE:
 		flask crontab add
 	run service by PM2:
 		pm2 start "python app.py --mode all --start 1_day_ago"
+	
+	python app.py --help [for more details]
 		
 """
 # TODO: rewrite with MongoDb batch operations for hi speed
@@ -98,6 +100,22 @@ def csv_2_df(path, dtype=None):
 	return df_
 
 
+def filter_nan_orders(df):
+	nan_df1 = df[df['id'].isna()]
+	nan_df2 = df[df['updated_at'].isna()]
+	nan_df = pd.concat([nan_df1, nan_df2])
+	df = df.dropna(subset=['id', 'updated_at'])
+	return df, nan_df
+
+
+def filter_nan_users(df):
+	nan_df1 = df[df['user_id'].isna()]
+	nan_df2 = df[df['updated_at'].isna()]
+	nan_df = pd.concat([nan_df1, nan_df2])
+	df = df.dropna(subset=['user_id', 'updated_at'])
+	return df, nan_df
+
+
 def process_orders_file(path, file, start_moment=VERY_EARLY_DATE, end_moment=datetime.datetime.now()):
 	"""
 	load orders from file, filter it for period and write to mongodb table
@@ -108,6 +126,8 @@ def process_orders_file(path, file, start_moment=VERY_EARLY_DATE, end_moment=dat
 	:return:
 	"""
 	df_orders = pd.read_csv(path + "/" + file, dtype={'user_id': 'S'})
+	df_orders, nan_orders = filter_nan_users(df_orders) # TODO error log
+
 	df_orders['updated_at'] = pd.to_datetime(df_orders['updated_at'])
 	df = df_orders.copy(deep=True).sort_values(by=['updated_at'])
 	df['updated_at'] = pd.to_datetime(df['updated_at'])
@@ -154,6 +174,7 @@ def process_user_file(path, file, start_moment=VERY_EARLY_DATE, end_moment=datet
 	"""
 	# user_df = pd.read_csv(path + "/" + file, dtype=USERS_DTYPES)
 	user_df = csv_2_df(path + "/" + file, dtype=USERS_DTYPES)
+	user_df, nan_users = filter_nan_users(user_df)  # TODO error log
 	user_df['updated_at'] = pd.to_datetime(user_df['updated_at'])
 	user_df['updated_at'] = pd.to_datetime(user_df['updated_at'])
 	mask = (user_df['updated_at'] > (start_moment - config.TIME_DELTA)) & (
@@ -198,7 +219,9 @@ if __name__ == '__main__':
 	parser.add_argument('-m', '--mode', type=str, choices=['all', 'simulate'], help="import all files or simulate",
 						default='all')
 	parser.add_argument('-f', '--freq', type=str, help="cron freq for simulating ex: 5min 12h 1M",
-						default="12h")
+						default="7D")
+						# default="12h")
+
 	parser.add_argument('-s', '--start', type=str,
 						help="start date for import period: `1 day ago`, `1 hours ago`, `1 year ago`...",
 						default="100 years ago")
@@ -210,11 +233,16 @@ if __name__ == '__main__':
 						help="database name",
 						default=config.DB_NAME)
 
+	parser.add_argument('--erase', dest='erase', action='store_true', default=False)
+
 	args = parser.parse_args()
 	config.MONGO_URI = args.dest
 	config.DB_NAME = args.db
-
 	client, db = db_util.prepare_database()
+	print('args.erase', args.erase)
+	if args.erase:
+		db_util.clear_database()
+
 	# db.orders.delete_many({})  # just for tests
 	if args.mode == "all":  # just import all from all files in dir: `data/`
 		db_util.info()
