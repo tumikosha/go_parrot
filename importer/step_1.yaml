@@ -1,0 +1,44 @@
+# Converting few CSV to one Mongodb database
+points:
+  source_o1:
+    type: csv_orders
+    uri: data/orders_xxx.csv
+    dtype:
+      user_id: S
+  source_o2:
+    type: csv_orders
+    uri: data/orders_202002181303.csv
+    dtype:
+      user_id: S
+  source_u1:
+    type: csv_users
+    uri: data/users_xxx.csv
+    dtype:
+      user_id: S
+      phone_number: S
+      created_at: S
+      updated_at: S
+  source_u2:
+    type: csv_users
+    uri: data/users_202002181303.csv
+    dtype:
+      user_id: S
+      phone_number: S
+      created_at: S
+      updated_at: S
+
+  destination_1:
+    type: csv_dest
+    uri: data/
+    name: result.csv
+  destination_src:
+    type: mongo_dest
+    uri: 'mongodb://127.0.0.1:57017/admin'
+    db_name: go_parrot_src
+    table_name: full_orders  # default: full_orders
+#    filtered_users_table_name: 'users' # default: None
+#    filtered_orders_table_name: 'orders' # default: None
+    unfiltered_orders_table_name: orders # default: None
+    unfiltered_users_table_name: users  # default: None
+    erase_point_on_start: True # remove all records on start # default: False
+

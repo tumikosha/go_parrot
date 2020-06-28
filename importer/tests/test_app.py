@@ -10,17 +10,64 @@ class Test(TestCase):
 		print(db)
 		self.assertTrue(db is not None)
 
-	def test_csv_2_df(self):
+	def test_point_orders_iterators(self):
 		import app
-		# df = app.csv_2_df('../data/users_202002181303.csv', dtype=app.USERS_DTYPES)
-		df = app.csv_2_df('../data/users_xxx.csv', dtype=app.USERS_DTYPES)
-		# print(len(df))
-		# print('>>>', df.iloc[0]['created_at'], type(df.iloc[0]['created_at']))
-		self.assertEqual(8614, len(df))
-		# self.assertTrue(True)
+		cfg_path = "data/config_test.yaml"
+		# cfg_path = "../data/config_test.yaml"
+		i = 0
+		for source_name, source, point_type in app.point_iterator(cfg_path, {}, tip="csv_orders", return_type='point'):
+			i += 1
+		self.assertEqual(i, 2)
+
+	def test_point_users_iterators(self):
+		import app
+		cfg_path = "data/config_test.yaml"
+		# cfg_path = "../data/config_test.yaml"
+		i = 0
+		for source_name, source, point_type in app.point_iterator(cfg_path, {}, tip="csv_orders", return_type='point'):
+			i += 1
+		self.assertEqual(i, 2)
+
+	def test_df_users_iterators(self):
+		import app
+		# cfg_path = "../data/config_test.yaml"
+		cfg_path = "data/config_test.yaml"
+		i = 0
+		for source_name, source, df in app.point_iterator(cfg_path, {}, tip="csv_orders", return_type='df'):
+			i += 1
+		self.assertEqual(i, 2)
+
+	# self.fail()
+
+	def test_df_users_iterators(self):
+		import app
+		# cfg_path = "../data/config_test.yaml"
+		cfg_path = "data/config_test.yaml"
+		j = 0
+		for source_name, source, df in app.point_iterator(cfg_path, {}, tip="csv_orders", return_type='df'):
+			j += len(df)
+
+		i = 0
+		for source_name, source, row in app.point_iterator(cfg_path, {}, tip="csv_orders", return_type='row'):
+			i += 1
+
+		self.assertTrue((i > 30000) and i==j)
+		# self.assertEqual(i, j)
+
+	def test_rec_transform(self):
+		import app
+		# cfg_path = "../data/config_test.yaml"
+		cfg_path = "data/config_test.yaml"
+		i = 0
+		for source_name, source, row in app.point_iterator(cfg_path, {}, tip="csv_orders", return_type='row'):
+			print(row)
+			if i >0: break
+			i += 1
+
+		self.assertTrue((i > 30000) and i==j)
+		# self.assertEqual(i, j)
+		# self.fail()
 
 
-# self.fail()
 if __name__ == '__main__':
 	unittest.main()
-

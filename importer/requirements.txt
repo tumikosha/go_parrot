@@ -5,3 +5,4 @@ flask-crontab
 pymongo
 dateparser
 argparse
+pyyaml

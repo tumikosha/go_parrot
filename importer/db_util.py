@@ -111,7 +111,7 @@ def update_order(order):
 		db.orders.insert_one(order)
 		return STATUS_INSERTED
 	# this is absolutely new order
-	if old_order['updated_at'] is None:  old_order['updated_at'] = VERY_EARLY_DATE # protect from None instead of date
+	if old_order['updated_at'] is None:  old_order['updated_at'] = VERY_EARLY_DATE  # protect from None instead of date
 	if old_order.get('updated_at', VERY_EARLY_DATE) < order['updated_at']:
 		db.orders.save(order)
 		return STATUS_REPLACED
@@ -119,29 +119,50 @@ def update_order(order):
 	return STATUS_SKIPPED
 
 
-def update_user(user):
-	"""
-	check if it is fresh order and write it to db
-	:param user: dictionary with fields
-	:return: STATUS_INSERTED | STATUS_REPLACED | STATUS_SKIPPED
-	"""
-	global db
+# def update_order(order):
+# 	"""
+# 	Check if it is a fresh order and write it to db
+# 	:param order: dictionary with fields
+# 	:return: STATUS_INSERTED | STATUS_REPLACED | STATUS_SKIPPED
+# 	"""
+# 	order['_id'] = order['id']
+# 	old_order = db.orders.find_one({'_id': order['id']})
+# 	mention_user(order['user_id'])
+# 	if old_order is None:
+# 		db.orders.insert_one(order)
+# 		return STATUS_INSERTED
+# 	# this is absolutely new order
+# 	if old_order['updated_at'] is None:  old_order['updated_at'] = VERY_EARLY_DATE  # protect from None instead of date
+# 	if old_order.get('updated_at', VERY_EARLY_DATE) < order['updated_at']:
+# 		db.orders.save(order)
+# 		return STATUS_REPLACED
+# 	# if we are here, the order is old and no need to update
+# 	return STATUS_SKIPPED
 
-	# db.customers.insert_one(order)
-	user['_id'] = user['user_id']
-	user['is_empty'] = False
-	old_user = db.customers.find_one({'_id': user['user_id']})
-	if old_user is None:
-		db.customers.insert_one(user)
-		return STATUS_INSERTED
-	# this is absolutely new order
-	# print(old_user['updated_at'], user['updated_at'])
-	if old_user['updated_at'] is None: old_user['updated_at'] = VERY_EARLY_DATE  # protect from None instead of date
-	if old_user.get('updated_at', VERY_EARLY_DATE) < user['updated_at']:
-		db.customers.save(user)
-		return STATUS_REPLACED
-	# if we are here, the user is old and no need to update
-	return STATUS_SKIPPED
+
+# def update_user(user):
+# 	"""
+# 	check if it is fresh order and write it to db
+# 	:param user: dictionary with fields
+# 	:return: STATUS_INSERTED | STATUS_REPLACED | STATUS_SKIPPED
+# 	"""
+# 	global db
+#
+# 	# db.customers.insert_one(order)
+# 	user['_id'] = user['user_id']
+# 	user['is_empty'] = False
+# 	old_user = db.customers.find_one({'_id': user['user_id']})
+# 	if old_user is None:
+# 		db.customers.insert_one(user)
+# 		return STATUS_INSERTED
+# 	# this is absolutely new order
+# 	# print(old_user['updated_at'], user['updated_at'])
+# 	if old_user['updated_at'] is None: old_user['updated_at'] = VERY_EARLY_DATE  # protect from None instead of date
+# 	if old_user.get('updated_at', VERY_EARLY_DATE) < user['updated_at']:
+# 		db.customers.save(user)
+# 		return STATUS_REPLACED
+# 	# if we are here, the user is old and no need to update
+# 	return STATUS_SKIPPED
 
 
 # user['_id'] = user['user_id']
@@ -216,3 +237,134 @@ def info():
 	print("customer range:", customer_first_dt, " --->", customer_last_dt)
 	print("-------------------------------")
 	return total_orders, total_customers, total_empty
+
+
+def write_df_to_mongoDB(my_df, \
+						database_name='mydatabasename', \
+						collection_name='mycollectionname',
+						server='localhost', \
+						mongodb_port=27017, \
+						chunk_size=100):
+	# """
+	# This function take a list and create a collection in MongoDB (you should
+	# provide the database name, collection, port to connect to the remoete database,
+	# server of the remote database, local port to tunnel to the other machine)
+	#
+	# ---------------------------------------------------------------------------
+	# Parameters / Input
+	#    my_list: the list to send to MongoDB
+	#    database_name:  database name
+	#
+	#    collection_name: collection name (to create)
+	#    server: the server of where the MongoDB database is hosted
+	#        Example: server = '132.434.63.86'
+	#    this_machine_port: local machine port.
+	#        For example: this_machine_port = '27017'
+	#    remote_port: the port where the database is operating
+	#        For example: remote_port = '27017'
+	#    chunk_size: The number of items of the list that will be send at the
+	#        some time to the database. Default is 100.
+	#
+	# Output
+	#    When finished will print "Done"
+	# ----------------------------------------------------------------------------
+	# FUTURE modifications.
+	# 1. Write to SQL
+	# 2. Write to csv
+	# ----------------------------------------------------------------------------
+	# 30/11/2017: Rafael Valero-Fernandez. Documentation
+	# """
+
+	# To connect
+	# import os
+	# import pandas as pd
+	# import pymongo
+	# from pymongo import MongoClient
+
+	client = pymongo.MongoClient('localhost', int(mongodb_port))
+	db = client[database_name]
+	collection = db[collection_name]
+	# To write
+	collection.delete_many({})  # Destroy the collection
+	# aux_df=aux_df.drop_duplicates(subset=None, keep='last') # To avoid repetitions
+	my_list = my_df.to_dict('records')
+	l = len(my_list)
+	ran = range(l)
+	steps = ran[chunk_size::chunk_size]
+	steps.extend([l])
+
+	# Inser chunks of the dataframe
+	i = 0
+	for j in steps:
+		print(j)
+		collection.insert_many(my_list[i:j])  # fill de collection
+		i = j
+
+	print('Done')
+	return
+
+
+def update_user(user, db=None, table=None):
+	"""
+	check if it is fresh order and write it to db
+	:param user: dictionary with fields
+	:return: STATUS_INSERTED | STATUS_REPLACED | STATUS_SKIPPED
+	"""
+	user['_id'] = user['user_id']
+	user['is_empty'] = False
+	if user.get('user_updated_at', None) is not None:
+		user['updated_at'] = user.get('user_updated_at', None)
+		del user['user_updated_at']
+
+	old_user = db[table].find_one({'_id': user['user_id']})
+	if old_user is None:
+		db[table].insert_one(user)
+		return STATUS_INSERTED
+	# this is absolutely new order
+	# print(old_user['updated_at'], user['updated_at'])
+	if old_user['updated_at'] is None: old_user['updated_at'] = VERY_EARLY_DATE  # protect from None instead of date
+	if old_user.get('updated_at', VERY_EARLY_DATE) < user['updated_at']:
+		db[table].save(user)
+		return STATUS_REPLACED
+	# if we are here, the user is old and no need to update
+	return STATUS_SKIPPED
+
+
+def clear_point(point):
+	if point['erase_point_on_start']:
+		print("ERASING point ", point)
+		if point['type'].find('mongo') > -1:
+			client = pymongo.MongoClient(point['uri'])
+			db = client[point['db_name']]
+			db['users'].remove({})
+			db['orders'].remove({})
+			db['full_orders'].remove({})
+
+
+def update_record(record, db=None, table=None):
+	"""
+	Check if it is a fresh order and write it to db
+	:param record: dictionary with fields after ETL
+	:return: STATUS_INSERTED | STATUS_REPLACED | STATUS_SKIPPED
+	"""
+	old_record = db[table].find_one({'_id': record['_id']})
+	if old_record is None:
+		db[table].insert_one(record)
+		# this is absolutely new order
+		return STATUS_INSERTED
+
+	if old_record['updated_at'] is None:
+		old_record['updated_at'] = VERY_EARLY_DATE  # protect from None instead of date
+
+	if old_record.get('updated_at', VERY_EARLY_DATE) < record['updated_at']:
+		# overwrite if current record is later
+		db[table].save(record)
+		return STATUS_REPLACED
+	# if we are here, the order is old and no need to update
+	return STATUS_SKIPPED
+
+
+def point_connection(point):
+	client = pymongo.MongoClient(point['uri'])
+	db = client[point['db_name']]
+	return client, db
