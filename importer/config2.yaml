@@ -30,14 +30,14 @@ points:
   source_with_orders: # this is point name, change it as you wish
     type: orders_mongo_source # enumeration[mongo_dest, orders_mongo_source, users_mongo_source, csv_orders, csv_users ]
     uri: 'mongodb://127.0.0.1:57017/admin'
-    db_name: src
+    db_name: src_all
     query: {} # TODO
     table_name: orders
 
   source_with_users: # this is point name, change it as you wish
     type: users_mongo_source # enumeration[mongo_dest, orders_mongo_source, users_mongo_source, csv_orders, csv_users ]
     uri: 'mongodb://127.0.0.1:57017/admin'
-    db_name: src
+    db_name: src_all
     query: {} # TODO
     table_name: users
 

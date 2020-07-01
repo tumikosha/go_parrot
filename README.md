@@ -50,10 +50,10 @@ PM2 is a daemon process manager that will help you manage and keep your applicat
         python app.py --yaml step_1.yaml
 ```
   
-  -m {all,simulate},    --mode {all,simulate}
+  -m {run,simulate},    --mode {run,simulate}
   
     run scenario file or simulate
-    defaul: 'all`
+    defaul: 'run`
                         
   -s START, --start START
   
@@ -123,31 +123,43 @@ Script makes following steps:
 
     type: csv_orders - the source of csv file with orders
     type: csv_users - the source of csv file with users
-    type:orders_mongo_source - mongo db collection with orders
-    type:users_mongo_source - mongo db collection with ousers
+    type: orders_mongo_source - mongo db collection with orders
+    type: users_mongo_source - mongo db collection with ousers
     
 Destination points:    
     
     type: mongo_dest  - output mongo db with collections 
     type: csv_dest - file with full_orders (joined order and user)   
     
-    Example:    
- ```
-points:
-  source_orders_1:       # just the name of point, redefine it as you wish
-    type: csv_orders  
-    uri: data/orders_xxx.csv        # path to file
-    dtype:             # field formats as  pandas.dataFrame DTYPE
-      user_id: S       # means this this field is string
-  source_u1:
-    type: csv_users
-    uri: data/users_xxx.csv
-    dtype:
-      user_id: S
-      phone_number: S
-      created_at: S
-      updated_at: S
-```
+    # Type of iterators, use it to iterate over sources
+
+
+    # Allowed Point types
+    class PointType(Enum):
+        CSV_ORDERS = "csv_orders" # CSV ORDER FILE
+        CSV_USERS = "csv_users" # CSV USER FILE
+        ORDERS_MONGO_SOURCE = 'orders_mongo_source' # MONGODB with  ORDERs
+        USERS_MONGO_SOURCE = 'users_mongo_source' # MONGODB with  USERS
+        MONGO_DEST = 'mongo_dest'  # MONGODB for full_orders and errors
+        CSV_DEST = 'CSV_dest'  # CSV with  full_orders
+
+Example:    
+
+    points:
+      source_orders_1:       # just the name of point, redefine it as you wish
+        type: csv_orders  
+        uri: data/orders_xxx.csv        # path to file
+        dtype:             # field formats as  pandas.dataFrame DTYPE
+          user_id: S       # means this this field is string
+      source_u1:
+        type: csv_users
+        uri: data/users_xxx.csv
+        dtype:
+          user_id: S
+          phone_number: S
+          created_at: S
+          updated_at: S
+
    
    See `config.yaml` for detailed example
 

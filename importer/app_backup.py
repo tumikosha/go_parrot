@@ -1,31 +1,6 @@
-# -*- coding: utf-8 -*-
-__author__ = "Veaceslav Kunitki"
-__copyright__ = "Copyright 2020. Please inform me in case of usage"
-__credits__ = ["No credits"]
-__license__ = "MIT"
-__version__ = "11.111111111"
-__maintainer__ = "Veaceslav Kuntiki"
-__email__ = "tumikosha@gmail.com"
-__status__ = "Prototype"
-"""
-ETL from different sources to diffirent destinations
-USAGE:=	
-	import all files:
-		python app.py --mode run --yaml step_1.yaml
-	simulate 5min activity:
-		python app.py --mode simulate -freq 5min --yaml simulate.yaml  
-	run service by cron:
-		flask crontab add
-	run service by PM2:
-		pm2 start "python app.py --mode all --start 1_day_ago"
-
-	python app.py --help [for more details]
-
-"""
-
 # import petl as etl, psycopg2 as pg, sys
-# import petl, os
-import yaml, os
+import petl, os
+import yaml
 import sys
 import pandas as pd
 from pprint import pprint
@@ -75,58 +50,39 @@ def csv_2_df(path, dtype=None) -> pd.DataFrame:
 	return df_
 
 
-# Type of iterators, use it to iterate over sources
-class IterType(Enum):
-	POINT = "point"
-	DF = 'df'
-	ROW = 'row'
+# def load_all_files(dir, start_with):
+# 	order_files = [f for f in os.listdir(dir) if f.startswith(start_with)]
+# 	count = 0
+# 	for file in order_files:
+# 		orders_ = petl.fromcsv(dir + "/" + file)
+# 		if count == 0:
+# 			all = orders_
+# 		else:
+# 			all = petl.merge(all, orders_, key="updated_at")
+# 		count += 1
+# 	return all
 
-
-# Allowed Point types
-class PointType(Enum):
-	CSV_ORDERS = "csv_orders" # CSV ORDER FILE
-	CSV_USERS = "csv_users" # CSV USER FILE
-	ORDERS_MONGO_SOURCE = 'orders_mongo_source' # MONGODB with  ORDERs
-	USERS_MONGO_SOURCE = 'users_mongo_source' # MONGODB with  USERS
-	MONGO_DEST = 'mongo_dest'  # MONGODB for full_orders and errors
-	CSV_DEST = 'CSV_dest'  # CSV with  full_orders
-
-
-def point_generator(yaml_path, tip=PointType.CSV_ORDERS):
-	"""
-	Iterates over point in YAMl file
-	"""
+def point_iterator(yaml_path, tip='csv_orders'):
 	with open(yaml_path) as f:
 		config = yaml.safe_load(f)
 	for source_name_, source_ in config['points'].items():
-		if source_['type'] == tip.value:
+		if source_['type'] == tip:
 			yield source_name_, source_, source_['type']
 
 
-def df_generator(yaml_path, query, tip=PointType.CSV_ORDERS, start=db_util.VERY_EARLY_DATE, end=datetime.datetime.now()):
-	"""
-	Iterates over point content in YAMl file, result as DataFrame
-	:param yaml_path: path to YAML file
-	:param query: mongodb query
-	:param tip: point Type Selector
-	:param  datetime.datetime start: time period start
-	:param  datetime.datetime end: time period end
-	:return: yield  source_name_, source_, df
-			 where df is pd.DataFrame
-	"""
+def df_iterator(yaml_path, query, tip='csv_orders', start=db_util.VERY_EARLY_DATE, end=datetime.datetime.now()):
 	with open(yaml_path) as f:
 		config = yaml.safe_load(f)
 	for source_name_, source_ in config['points'].items():
-		if source_['type'] == tip.value:
+		if source_['type'] == tip:
 			f = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d %H:%M:%S')
-			if tip == PointType.CSV_ORDERS or tip == PointType.CSV_USERS:
+			if tip == 'csv_orders' or tip == 'csv_users':
 				df = pd.read_csv(source_['uri'], dtype=source_['dtype'], index_col=False,
 								 date_parser=f, parse_dates=['created_at', 'updated_at'])
 
 				yield source_name_, source_, df
 			# if tip == 'mongo_orders_source':
-			# if tip in [PointType.ORDERS_MONGO_SOURCE, PointType.USERS_MONGO_SOURCE]
-			if tip.value.find("mongo_source") > -1:
+			if tip.find("mongo_source") > -1:
 				arr = []
 				client, db = db_util.point_connection(source_)
 				q = {"$and": [query, {'updated_at': {'$gte': start}}, {'updated_at': {'$lte': end}}]}
@@ -144,22 +100,27 @@ def df_generator(yaml_path, query, tip=PointType.CSV_ORDERS, start=db_util.VERY_
 				yield source_name_, source_, df
 
 
-def row_generator(yaml_path, query, tip=PointType.CSV_ORDERS, start=db_util.VERY_EARLY_DATE,
+class IterType(Enum):
+	POINT = "point"
+	DF = 'df'
+	ROW = 'row'
+
+
+class PointType(Enum):
+	CSV_ORDERS = "csv_orders"
+	CSV_USERS = "csv_users"
+	ORDERS_MONGO_SOURCE = 'orders_mongo_source'
+	USERS_MONGO_SOURCE = 'users_mongo_source'
+	MONGO_DEST = 'mongo_dest'
+	CSV_DEST = 'CSV_dest'
+
+
+def row_iterator(yaml_path, query, tip=PointType.CSV_ORDERS, start=db_util.VERY_EARLY_DATE,
 				 end=datetime.datetime.now()):
-	"""
-	Iterates over point content in YAMl file, result as rows/dict
-	:param yaml_path: path to YAML file
-	:param query: mongodb query
-	:param tip: point Type Selector
-	:param  datetime.datetime start: time period start
-	:param  datetime.datetime end: time period end
-	:return: yield  source_name_, source_, row
-			 where df is dict: record from database or line from CSV file
-	"""
 	with open(yaml_path) as f:
 		config = yaml.safe_load(f)
 	for source_name_, source_ in config['points'].items():
-		if source_['type'] == tip.value:
+		if source_['type'] == tip:
 			if tip == PointType.CSV_ORDERS:
 				f = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d %H:%M:%S')
 				df = pd.read_csv(source_['uri'], dtype=source_['dtype'], index_col=False,
@@ -185,32 +146,88 @@ def universal_iterator(yaml_path, query, tip=PointType.CSV_ORDERS,
 					   return_type=IterType.POINT,
 					   start=dateparser.parse("100 years ago"),
 					   end=dateparser.parse("2 days in")):
-	"""	Useless. 	3 iterators in one
-		The idea is to have one universal iterator over all sources  and items,
-		:param yaml_path: path to YAML file
-		:param query:  TODO
-		:param tip:  point type to iterate [csv_orders, csv_users, orders_mongo_source, users_mongo_source, csv_dest, mongo_dest]
-		:param return_type:  ['point' | 'df' | 'row']
-		:param start:  start time  (WARNING do not supported for `point` and `row` iteration) TODO
-		:param end:  end time (WARNING do not supported for `point` and `row` iteration) TODO
-		:return: generator  (source_name_, source_, ITEM) where ITEM can be Point dict |  DataFrame | ROW dict
-		:rtype:  str, dict, obj
-		"""
 
 	if return_type == IterType.POINT:
-		for a, b, c in point_generator(yaml_path, tip=tip):
+		for a, b, c in point_iterator(yaml_path, tip=tip):
 			yield a, b, c
 
 	if return_type == IterType.DF:
-		for a, b, c in df_generator(yaml_path, {}, tip=tip, start=start, end=end):
+		for a, b, c in df_iterator(yaml_path, {}, tip=tip, start=start, end=end):
 			yield a, b, c
 
 	if return_type == IterType.ROW:
-		for a, b, c in row_generator(yaml_path, {}, tip=tip, start=start, end=end):
+		for a, b, c in row_iterator(yaml_path, {}, tip=tip, start=start, end=end):
 			yield a, b, c
 
 
-def load_and_filter_all_users(cfg_path_, tip=PointType.CSV_USERS, start=db_util.VERY_EARLY_DATE,
+# def universal_iterator(yaml_path, query, tip='csv_orders', return_type='row', start=db_util.VERY_EARLY_DATE,
+# 					   end=datetime.datetime.now()):
+# 	"""
+# 	Iterates over all points with specified type
+# 	The idea is to have one universal iterator over all sources
+# 	:param yaml_path: path to YAML file
+# 	:param query:  TODO
+# 	:param tip:  point type to iterate [csv_orders, csv_users, orders_mongo_source, users_mongo_source, csv_dest, mongo_dest]
+# 	:param return_type:  ['point' | 'df' | 'row']
+# 	:param start:  start time  (WARNING do not supported for `point` and `row` iteration) TODO
+# 	:param end:  end time (WARNING do not supported for `point` and `row` iteration) TODO
+# 	:return: generator  (source_name_, source_, ITEM) where ITEM can be Point dict |  DataFrame | ROW dict
+# 	:rtype:  str, dict, obj
+# 	"""
+#
+# 	with open(yaml_path) as f:
+# 		config = yaml.safe_load(f)
+#
+# 	for source_name_, source_ in config['points'].items():
+# 		if source_['type'] == tip:
+# 			if return_type == 'point':
+# 				yield source_name_, source_, source_['type']
+# 			# return
+#
+# 			if return_type == 'df':
+# 				f = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d %H:%M:%S')
+# 				if tip == 'csv_orders' or tip == 'csv_users':
+# 					df = pd.read_csv(source_['uri'], dtype=source_['dtype'], index_col=False,
+# 									 date_parser=f, parse_dates=['created_at', 'updated_at'])
+#
+# 					yield source_name_, source_, df
+# 				# if tip == 'mongo_orders_source':
+# 				if tip.find("mongo_source") > -1:
+# 					arr = []
+# 					client, db = db_util.point_connection(source_)
+# 					q = {"$and": [query, {'updated_at': {'$gte': start}}, {'updated_at': {'$lte': end}}]}
+# 					print('start:', str(start), ":::>", str(end))
+# 					print(q)
+# 					cursor = db[source_['table_name']].find(q)
+# 					# Expand the cursor and construct the DataFrame
+# 					df = pd.DataFrame(list(cursor))
+# 					cursor.close()
+# 					# print("DF::", df)
+# 					if len(df) != 0:
+# 						df = df.drop(['_id'], axis=1)
+# 					else:
+# 						df = None
+# 					yield source_name_, source_, df
+#
+# 			if return_type == 'row':
+# 				if tip == 'csv_orders':
+# 					f = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d %H:%M:%S')
+# 					df = pd.read_csv(source_['uri'], dtype=source_['dtype'], index_col=False,
+# 									 date_parser=f, parse_dates=['created_at', 'updated_at'])
+# 					for idx, row_ in df.T.iteritems():
+# 						yield source_name_, source_, row_
+# 				# if tip == 'mongo_orders_source':
+# 				if tip.find("mongo_source") > -1:
+# 					arr = []
+# 					client, db = db_util.point_connection(source_)
+# 					cursor = db[source_['table_name']].find(query, no_cursor_timeout=True)
+# 					# Expand the cursor and construct the DataFrame
+# 					for row in cursor:
+# 						# del row['_id']
+# 						yield source_name_, source_, row
+
+
+def load_and_filter_all_users(cfg_path_, tip="csv_users", start=db_util.VERY_EARLY_DATE,
 							  end=datetime.datetime.now()) -> (pd.DataFrame, pd.DataFrame):
 	"""
 	Load YAML, Iterates over all points with specified type==tip as DataFrames
@@ -226,8 +243,7 @@ def load_and_filter_all_users(cfg_path_, tip=PointType.CSV_USERS, start=db_util.
 	"""
 
 	df_summ = None
-	# for source_name, source, df in universal_iterator(cfg_path_, {}, tip=tip, return_type=IterType.DF, start=start, end=end):
-	for source_name, source, df in df_generator(cfg_path_, {}, tip=tip, start=start, end=end):
+	for source_name, source, df in universal_iterator(cfg_path_, {}, tip=tip, return_type=IterType.DF, start=start, end=end):
 		if df_summ is None:
 			df_summ = df
 		else:
@@ -241,7 +257,7 @@ def load_and_filter_all_users(cfg_path_, tip=PointType.CSV_USERS, start=db_util.
 	return df_summ, df_summ_filtered
 
 
-def load_and_filter_all_orders(cfg_path_, tip=PointType.CSV_ORDERS, start=db_util.VERY_EARLY_DATE,
+def load_and_filter_all_orders(cfg_path_, tip="csv_orders", start=db_util.VERY_EARLY_DATE,
 							   end=datetime.datetime.now()) -> (pd.DataFrame, pd.DataFrame):
 	"""
 	Load YAML, Iterates over all points with specified type==tip as DataFrames
@@ -257,8 +273,7 @@ def load_and_filter_all_orders(cfg_path_, tip=PointType.CSV_ORDERS, start=db_uti
 	"""
 
 	df_summ = None
-	# for source_name, source, df in universal_iterator(cfg_path_, {}, tip=tip, return_type=IterType.DF, start=start, end=end):
-	for source_name, source, df in df_generator(cfg_path_, {}, tip=tip, start=start, end=end):
+	for source_name, source, df in universal_iterator(cfg_path_, {}, tip=tip, return_type=IterType.DF, start=start, end=end):
 		if df_summ is None:
 			df_summ = df
 		else:
@@ -362,18 +377,17 @@ def process_yaml(cfg_path, start=db_util.VERY_EARLY_DATE, end=dateparser.parse("
 	# STEP1. loading & Filtering
 	print('processing', cfg_path)
 	print('Loading CSV users...')
-	df_users_unfiltered, df_users = load_and_filter_all_users(cfg_path, tip=PointType.CSV_USERS)
+	df_users_unfiltered, df_users = load_and_filter_all_users(cfg_path, tip="csv_users")
 
 	print('Loading CSV orders...')
-	df_orders_unfiltered, df_orders = load_and_filter_all_orders(cfg_path, tip=PointType.CSV_ORDERS)
+	df_orders_unfiltered, df_orders = load_and_filter_all_orders(cfg_path, tip="csv_orders")
 
 	print('Loading Mongo orders...')
-	df_orders_unfiltered_M, df_orders_M = load_and_filter_all_orders(cfg_path, tip=PointType.ORDERS_MONGO_SOURCE,
-																	 start=start,
+	df_orders_unfiltered_M, df_orders_M = load_and_filter_all_orders(cfg_path, tip="orders_mongo_source", start=start,
 																	 end=end)
 
 	print('Loading Mongo users...')  # we ignore time range for users!
-	df_users_unfiltered_M, df_users_M = load_and_filter_all_users(cfg_path, tip=PointType.USERS_MONGO_SOURCE)
+	df_users_unfiltered_M, df_users_M = load_and_filter_all_users(cfg_path, tip="users_mongo_source")
 	df_users = fix_df_users(df_users)
 	df_users_M = fix_df_users(df_users_M)
 	df_users = merge_df(df_users, df_users_M)
@@ -422,8 +436,8 @@ def process_yaml(cfg_path, start=db_util.VERY_EARLY_DATE, end=dateparser.parse("
 	if full_orders is not None:
 		full_orders.to_csv("data/full_orders.csv", na_rep='None')
 
-	# for source_name, source, point_type in 	universal_iterator(cfg_path, {}, tip="mongo_dest", return_type=IterType.POINT):
-	for source_name, source, point_type in point_generator(cfg_path, tip=PointType.MONGO_DEST):
+	for source_name, source, point_type in \
+			universal_iterator(cfg_path, {}, tip="mongo_dest", return_type=IterType.POINT):
 		full_orders[['updated_at']] = full_orders[['updated_at']].astype(object).where(
 			full_orders[['updated_at']].notnull(), None)
 		# ERASING POINT TODO for all collections
@@ -488,6 +502,7 @@ def process_yaml(cfg_path, start=db_util.VERY_EARLY_DATE, end=dateparser.parse("
 def scheduled_job(  # start_moment=dateparser.parse('5 min ago'),
 		end_moment=datetime.datetime.now()):
 	"""
+	scan dir `data/` for orders / users for specified period
 	# :param start_moment:  moment  for start of period
 	:param end_moment:  moment  for end of period
 	:return: None
@@ -514,8 +529,8 @@ def scheduled_job(  # start_moment=dateparser.parse('5 min ago'),
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(
 		description='Copy orders and users from sources to dest described in `config.yaml`')
-	parser.add_argument('-m', '--mode', type=str, choices=['run', 'simulate'], help="import all files or simulate",
-						default='run')
+	parser.add_argument('-m', '--mode', type=str, choices=['all', 'simulate'], help="import all files or simulate",
+						default='all')
 	parser.add_argument('-f', '--freq', type=str, help="cron freq for simulating ex: 5min 12h 1M",
 						default="1D")
 	# default="12h")
@@ -537,15 +552,23 @@ if __name__ == "__main__":
 	end = dateparser.parse(args.end.replace("_", " "))
 	print("Period:", start, end)
 	logger.info("Period: " + str(start) + " ::: " + str(end))
-	if args.mode == 'run':  # 'simulate'
+	# process_yaml(args.yaml, start=start, end=end)
+	if args.mode == 'all':  # 'simulate'
 		# process_yaml("step_1.yaml")
 		# print("---===STEP 2===---")
 		# process_yaml("step_2.yaml")
-		process_yaml(args.yaml, start=start, end=end)
-		# process_yaml(args.yaml)
+		process_yaml(args.yaml)
+	# sys.exit()
+	# process_yaml("config.yaml", start=start, end=end)
+	# sim_range = pd.date_range(start=begin, end=now, freq=args.freq)
+	# sim_range = pd.date_range(start=start, end=datetime.datetime.now(), freq="5min")
 
 	if args.mode == 'simulate':
-		sim_range = pd.date_range(start=start, end=datetime.datetime.now(), freq=args.freq)
+		# process_yaml("step_1_all.yaml")
+		# print("---===STEP 2===---")
+		# process_yaml("step_2.yaml")
+
+		sim_range = pd.date_range(start=start, end=datetime.datetime.now(), freq="1D")
 		total = 0
 		with tqdm.tqdm(total=len(sim_range), desc="simulating time ") as pbar:
 			for idx in range(len(sim_range) - 1):
@@ -560,5 +583,9 @@ if __name__ == "__main__":
 				pbar.set_description("---===  %s" % str(moment) + "===---")
 				pbar.refresh()
 
+		# start = dateparser.parse('2 years ago')
+		# end = dateparser.parse('today')
+		# process_yaml(args.yaml, start=start, end=end)
+		sys.exit()
 
 # flask crontab add

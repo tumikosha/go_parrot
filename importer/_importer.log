@@ -250,3 +250,282 @@
 2020-07-01 13:40:03,301 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
 2020-07-01 13:40:03,510 - import_app - INFO - orders imported: 5
 2020-07-01 13:40:03,510 - import_app - INFO - flask cronjob ended
+2020-07-01 13:45:02,645 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 13:45:02,656 - import_app - INFO - flask cronjob started
+2020-07-01 13:45:02,661 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 13:45:02,844 - import_app - INFO - orders imported: 5
+2020-07-01 13:45:02,844 - import_app - INFO - flask cronjob ended
+2020-07-01 13:50:02,781 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 13:50:02,794 - import_app - INFO - flask cronjob started
+2020-07-01 13:50:02,799 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 13:50:02,961 - import_app - INFO - orders imported: 5
+2020-07-01 13:50:02,961 - import_app - INFO - flask cronjob ended
+2020-07-01 13:55:02,930 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 13:55:02,942 - import_app - INFO - flask cronjob started
+2020-07-01 13:55:02,947 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 13:55:03,121 - import_app - INFO - orders imported: 5
+2020-07-01 13:55:03,121 - import_app - INFO - flask cronjob ended
+2020-07-01 14:00:03,157 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:00:03,169 - import_app - INFO - flask cronjob started
+2020-07-01 14:00:03,174 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 14:00:03,313 - import_app - INFO - orders imported: 5
+2020-07-01 14:00:03,313 - import_app - INFO - flask cronjob ended
+2020-07-01 14:05:03,594 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:05:03,608 - import_app - INFO - flask cronjob started
+2020-07-01 14:05:03,615 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 14:05:03,808 - import_app - INFO - orders imported: 5
+2020-07-01 14:05:03,808 - import_app - INFO - flask cronjob ended
+2020-07-01 14:05:22,637 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:05:22,649 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 14:05:22.649324
+2020-07-01 14:09:58,774 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:10:03,012 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:10:03,027 - import_app - INFO - flask cronjob started
+2020-07-01 14:10:03,034 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 14:10:03,193 - import_app - INFO - orders imported: 5
+2020-07-01 14:10:03,193 - import_app - INFO - flask cronjob ended
+2020-07-01 14:11:35,790 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:12:00,095 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:15:03,419 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:15:03,432 - import_app - INFO - flask cronjob started
+2020-07-01 14:15:03,439 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 14:15:03,603 - import_app - INFO - orders imported: 5
+2020-07-01 14:15:03,604 - import_app - INFO - flask cronjob ended
+2020-07-01 14:15:27,826 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:15:59,741 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:17:05,418 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:17:28,257 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:17:44,380 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:18:04,760 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:18:12,258 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:18:53,897 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:20:02,900 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:20:02,916 - import_app - INFO - flask cronjob started
+2020-07-01 14:20:02,922 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 14:20:03,124 - import_app - INFO - orders imported: 5
+2020-07-01 14:20:03,124 - import_app - INFO - flask cronjob ended
+2020-07-01 14:24:21,011 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:25:03,459 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:25:03,472 - import_app - INFO - flask cronjob started
+2020-07-01 14:25:03,478 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 14:25:03,634 - import_app - INFO - orders imported: 5
+2020-07-01 14:25:03,634 - import_app - INFO - flask cronjob ended
+2020-07-01 14:25:42,265 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:27:03,122 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:27:28,815 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:28:00,795 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:28:15,437 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:29:10,622 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:29:31,697 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:30:02,842 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:30:02,855 - import_app - INFO - flask cronjob started
+2020-07-01 14:30:02,861 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 14:30:03,077 - import_app - INFO - orders imported: 5
+2020-07-01 14:30:03,077 - import_app - INFO - flask cronjob ended
+2020-07-01 14:30:30,488 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:31:54,296 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:33:15,642 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:33:23,034 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:33:30,193 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:33:40,440 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:34:43,619 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:35:03,351 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:35:03,365 - import_app - INFO - flask cronjob started
+2020-07-01 14:35:03,372 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 14:35:03,552 - import_app - INFO - orders imported: 5
+2020-07-01 14:35:03,552 - import_app - INFO - flask cronjob ended
+2020-07-01 14:35:38,130 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:40:02,759 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:40:02,775 - import_app - INFO - flask cronjob started
+2020-07-01 14:40:02,782 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 14:40:02,967 - import_app - INFO - orders imported: 5
+2020-07-01 14:40:02,967 - import_app - INFO - flask cronjob ended
+2020-07-01 14:42:51,777 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:43:33,736 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:44:30,075 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:44:57,649 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:45:03,275 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:45:03,289 - import_app - INFO - flask cronjob started
+2020-07-01 14:45:03,296 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 14:45:03,458 - import_app - INFO - orders imported: 5
+2020-07-01 14:45:03,458 - import_app - INFO - flask cronjob ended
+2020-07-01 14:45:33,300 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:47:10,437 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:47:58,835 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:49:33,883 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:49:52,152 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:50:02,790 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:50:02,803 - import_app - INFO - flask cronjob started
+2020-07-01 14:50:02,814 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 14:50:02,984 - import_app - INFO - orders imported: 5
+2020-07-01 14:50:02,984 - import_app - INFO - flask cronjob ended
+2020-07-01 14:53:35,865 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:55:03,246 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 14:55:03,260 - import_app - INFO - flask cronjob started
+2020-07-01 14:55:03,266 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 14:55:03,434 - import_app - INFO - orders imported: 5
+2020-07-01 14:55:03,435 - import_app - INFO - flask cronjob ended
+2020-07-01 15:00:02,783 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:00:02,801 - import_app - INFO - flask cronjob started
+2020-07-01 15:00:02,810 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 15:00:02,990 - import_app - INFO - orders imported: 5
+2020-07-01 15:00:02,990 - import_app - INFO - flask cronjob ended
+2020-07-01 15:00:51,508 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:00:51,525 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:00:51.525544
+2020-07-01 15:01:13,689 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:01:13,705 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:01:13.705204
+2020-07-01 15:02:01,065 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:02:01,077 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:02:01.076930
+2020-07-01 15:03:14,767 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:03:14,798 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:03:14.798015
+2020-07-01 15:05:03,301 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:05:03,322 - import_app - INFO - flask cronjob started
+2020-07-01 15:05:03,329 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 15:05:03,329 - import_app - INFO - orders imported: 0
+2020-07-01 15:05:03,329 - import_app - INFO - flask cronjob ended
+2020-07-01 15:07:53,584 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:07:53,604 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:07:53.604441
+2020-07-01 15:08:18,381 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:08:18,396 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:08:18.396000
+2020-07-01 15:08:27,139 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:08:27,155 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:08:27.155414
+2020-07-01 15:08:32,162 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:08:32,179 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:08:32.179000
+2020-07-01 15:09:44,042 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:09:44,059 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:09:44.058820
+2020-07-01 15:09:59,077 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:09:59,093 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:09:59.093269
+2020-07-01 15:10:03,109 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:10:03,137 - import_app - INFO - flask cronjob started
+2020-07-01 15:10:03,149 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 15:10:03,332 - import_app - INFO - orders imported: 5
+2020-07-01 15:10:03,332 - import_app - INFO - flask cronjob ended
+2020-07-01 15:10:19,666 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:10:19,680 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:10:19.680564
+2020-07-01 15:15:03,354 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:15:03,370 - import_app - INFO - flask cronjob started
+2020-07-01 15:15:03,376 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 15:15:03,525 - import_app - INFO - orders imported: 5
+2020-07-01 15:15:03,526 - import_app - INFO - flask cronjob ended
+2020-07-01 15:16:04,295 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:16:04,313 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:16:04.312877
+2020-07-01 15:16:25,415 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:16:25,431 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:16:25.431197
+2020-07-01 15:19:00,501 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:19:00,518 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:19:00.518617
+2020-07-01 15:20:02,786 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:20:02,804 - import_app - INFO - flask cronjob started
+2020-07-01 15:20:02,813 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 15:20:02,891 - import_app - ERROR - scheduled_job: point_iterator() got multiple values for argument 'tip'
+2020-07-01 15:20:02,891 - import_app - INFO - flask cronjob ended
+2020-07-01 15:24:43,231 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:24:43,250 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:24:43.249760
+2020-07-01 15:24:47,556 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:24:47,575 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:24:47.574733
+2020-07-01 15:25:03,159 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:25:03,180 - import_app - INFO - flask cronjob started
+2020-07-01 15:25:03,188 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 15:25:03,211 - import_app - INFO - orders imported: 0
+2020-07-01 15:25:03,211 - import_app - INFO - flask cronjob ended
+2020-07-01 15:25:03,993 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:25:04,011 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:25:04.011192
+2020-07-01 15:25:18,415 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:25:18,443 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:25:18.443223
+2020-07-01 15:25:59,242 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:25:59,259 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:25:59.259123
+2020-07-01 15:26:06,426 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:26:06,454 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:26:06.453842
+2020-07-01 15:26:20,303 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:26:20,329 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:26:20.329387
+2020-07-01 15:28:02,009 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:28:02,026 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:28:02.026534
+2020-07-01 15:28:08,917 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:28:08,943 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:28:08.943468
+2020-07-01 15:30:02,951 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:30:02,970 - import_app - INFO - flask cronjob started
+2020-07-01 15:30:02,977 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 15:30:03,000 - import_app - INFO - orders imported: 0
+2020-07-01 15:30:03,001 - import_app - INFO - flask cronjob ended
+2020-07-01 15:30:28,317 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:30:28,344 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:30:28.344272
+2020-07-01 15:30:41,829 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:30:41,846 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:30:41.846340
+2020-07-01 15:30:47,701 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:30:47,727 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:30:47.726812
+2020-07-01 15:31:05,312 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:31:05,339 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:31:05.338809
+2020-07-01 15:32:38,073 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:32:38,087 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:32:38.087091
+2020-07-01 15:33:34,257 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:33:34,275 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:33:34.275081
+2020-07-01 15:34:40,075 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:34:40,091 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:34:40.091744
+2020-07-01 15:35:02,879 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:35:02,897 - import_app - INFO - flask cronjob started
+2020-07-01 15:35:02,903 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 15:35:03,069 - import_app - INFO - orders imported: 5
+2020-07-01 15:35:03,069 - import_app - INFO - flask cronjob ended
+2020-07-01 15:37:18,744 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:37:18,761 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:37:18.761232
+2020-07-01 15:37:31,950 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:37:31,968 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:37:31.968334
+2020-07-01 15:37:49,086 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:37:49,103 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:37:49.103515
+2020-07-01 15:38:04,365 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:38:04,383 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:38:04.382898
+2020-07-01 15:38:25,563 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:38:25,582 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:38:25.581829
+2020-07-01 15:38:48,240 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:38:48,257 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:38:48.257590
+2020-07-01 15:40:03,398 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:40:03,419 - import_app - INFO - flask cronjob started
+2020-07-01 15:40:03,426 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 15:40:03,610 - import_app - INFO - orders imported: 5
+2020-07-01 15:40:03,610 - import_app - INFO - flask cronjob ended
+2020-07-01 15:45:02,902 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:45:02,921 - import_app - INFO - flask cronjob started
+2020-07-01 15:45:02,928 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 15:45:03,111 - import_app - INFO - orders imported: 5
+2020-07-01 15:45:03,111 - import_app - INFO - flask cronjob ended
+2020-07-01 15:49:19,884 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:49:19,899 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 15:49:19.899356
+2020-07-01 15:50:03,384 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:50:03,401 - import_app - INFO - flask cronjob started
+2020-07-01 15:50:03,407 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 15:50:03,575 - import_app - INFO - orders imported: 5
+2020-07-01 15:50:03,575 - import_app - INFO - flask cronjob ended
+2020-07-01 15:55:02,920 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 15:55:02,938 - import_app - INFO - flask cronjob started
+2020-07-01 15:55:02,945 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 15:55:03,103 - import_app - INFO - orders imported: 5
+2020-07-01 15:55:03,104 - import_app - INFO - flask cronjob ended
+2020-07-01 16:00:03,389 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 16:00:03,407 - import_app - INFO - flask cronjob started
+2020-07-01 16:00:03,414 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 16:00:03,581 - import_app - INFO - orders imported: 5
+2020-07-01 16:00:03,582 - import_app - INFO - flask cronjob ended
+2020-07-01 16:00:41,622 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 16:00:41,638 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 16:00:41.638403
+2020-07-01 16:02:02,920 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 16:02:02,936 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 16:02:02.936141
+2020-07-01 16:02:04,828 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 16:02:04,841 - import_app - INFO - Period: 2019-03-01 16:02:04.839427 ::: 2020-07-02 16:02:04.841289
+2020-07-01 16:02:51,508 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 16:02:51,523 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 16:02:51.523059
+2020-07-01 16:03:12,571 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 16:03:20,265 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 16:03:19.408227
+2020-07-01 16:03:52,496 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 16:03:52,514 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 16:03:52.513842
+2020-07-01 16:04:12,384 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 16:04:12,400 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 16:04:12.400497
+2020-07-01 16:04:37,970 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 16:04:37,986 - import_app - INFO - Period: 2020-03-01 00:00:00 ::: 2020-07-02 16:04:37.986508
+2020-07-01 16:05:02,961 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 16:05:02,981 - import_app - INFO - flask cronjob started
+2020-07-01 16:05:02,988 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 16:05:03,174 - import_app - INFO - orders imported: 5
+2020-07-01 16:05:03,175 - import_app - INFO - flask cronjob ended
+2020-07-01 16:10:03,339 - import_app - INFO - [x] Flask importer app runned
+2020-07-01 16:10:03,358 - import_app - INFO - flask cronjob started
+2020-07-01 16:10:03,365 - import_app - INFO - Period: 2020-06-24 00:00:00 ::: 2020-07-03 00:00:00
+2020-07-01 16:10:03,566 - import_app - INFO - orders imported: 5
+2020-07-01 16:10:03,566 - import_app - INFO - flask cronjob ended
