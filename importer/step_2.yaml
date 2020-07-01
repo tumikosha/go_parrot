@@ -1,26 +1,56 @@
+# Mixing CSV and mongoDB sources
 points:
   source_with_orders: # this is point name, change is as you wish
     type: orders_mongo_source # enumeration[mongo_dest, orders_mongo_source, users_mongo_source, csv_orders, csv_users ]
     uri: 'mongodb://127.0.0.1:57017/admin'
-    db_name: go_parrot_src
+    db_name: src
     query: {} # TODO
     table_name: orders
+
   source_with_users: # this is point name, change is as you wish
     type: users_mongo_source # enumeration[mongo_dest, orders_mongo_source, users_mongo_source, csv_orders, csv_users ]
     uri: 'mongodb://127.0.0.1:57017/admin'
-    db_name: go_parrot_src
+    db_name: src
     query: {} # TODO
     table_name: users
 
 
-  destination_src: # this is point name, change is as you wish
+  destination_dest: # this is point name, change is as you wish
     type: mongo_dest # enumeration[mongo_dest, orders_mongo_source, users_mongo_source, csv_orders, csv_users ]
     uri: 'mongodb://127.0.0.1:57017/admin'
-    db_name: go_parrot_dest
+    db_name: dest
     table_name: full_orders  # default: full_orders
-    filtered_users_table_name: 'users' # default: None
-    filtered_orders_table_name: 'orders' # default: None
-    unfiltered_orders_table_name: orders # default: None
-    unfiltered_users_table_name: users  # default: None
+    filtered_users_table_name: users # default: None
+    filtered_orders_table_name: orders # default: None
+    unfiltered_orders_table_name: unfiltered_orders # default: None
+    unfiltered_users_table_name: unfiltered_users  # default: None
     erase_point_on_start: True # remove all records on start # default: False
 
+
+  # ---------
+#  source_o1:
+#    type: csv_orders
+#    uri: data/orders_xxx.csv
+#    dtype:
+#      user_id: S
+#  source_o2:
+#    type: csv_orders
+#    uri: data/orders_202002181303.csv
+#    dtype:
+#      user_id: S
+#  source_u1:
+#    type: csv_users
+#    uri: data/users_xxx.csv
+#    dtype:
+#      user_id: S
+#      phone_number: S
+#      created_at: S
+#      updated_at: S
+#  source_u2:
+#    type: csv_users
+#    uri: data/users_202002181303.csv
+#    dtype:
+#      user_id: S
+#      phone_number: S
+#      created_at: S
+#      updated_at: S

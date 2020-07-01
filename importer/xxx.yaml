@@ -42,5 +42,5 @@ points:
 #    filtered_orders_table_name: 'orders' # default: None
     unfiltered_orders_table_name: orders # default: None
     unfiltered_users_table_name: users  # default: None
-    erase_point_on_start: True # remove all records on start # default: False
+#    erase_point_on_start: True # remove all records on start # default: False
 

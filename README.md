@@ -1,16 +1,14 @@
-This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory `data/`
-This script imports all files with orders_xxxx.csv/users_xxxx.csv from directory `data/`
+This script execute scenarios described in *.YAML file
 
- 
-# import all files  from directory:
+
+# Run scenario described in file `config.yaml`
 ```
-    python app.py --mode all
-    python app.py --start January_12,_2012_10:00   --end January_1,_2020_10:00 
-    python app.py --mode all --path data/ --start 100_years_ago --end tomorrow --dest mongodb://127.0.0.1:57017/admin
+    python app.py --yaml config.yaml
+    python app.py --yaml config.yaml --start 1_year_and_2_months_ago_00:00  --end 2_days_in
 ```
 	
 # Simulate 5min activity:
-	python app.py --mode simulate --freq 5min --dest mongodb://127.0.0.1:57017/admin		
+	python app.py --mode simulate --freq 5min --yaml simulate.yaml --start 100_years_and_2_months_ago_00:00  --end 2_days_in		
 	
 # Run service by cron:
     cd importer
@@ -25,13 +23,13 @@ PM2 is a daemon process manager that will help you manage and keep your applicat
    
      
     
-    pm2 start 'python app.py --mode all ' --name app --cron "*/10 * * * *"
+    pm2 start 'python app.py --yaml config.yaml ' --name app --cron "*/10 * * * *"
     pm2 list
     or
     pm2 start app.yml
     ------------- app.yml example---        
       - script: /home/ubuntu/goparrot/app.py
-      args: "--mode all --path data/ --start 100_years_ago"
+      args: "--yaml config.yaml --start 100_years_ago"
       name: "app"
       cron: "0/5 * * * *"
       max-memory-restart: 500M
@@ -45,35 +43,27 @@ PM2 is a daemon process manager that will help you manage and keep your applicat
     
     show this help message and exit
   
-  -d DEST, --dest DEST
+  -y FILE, --yaml FILE
+    path *.yaml file
     
-    mongodb URI to mongo instance, like   mongodb://db_name:password@ip:port/admin
 ```bash
-        python app.py --dest mongodb://127.0.0.1:57017/admin
+        python app.py --yaml step_1.yaml
 ```
-  -db DB_NAME
-                                
-    name of the database on mongo instance specified in --dest
-    default: `go_parrot`
   
   -m {all,simulate},    --mode {all,simulate}
   
-    import all files or simulate
+    run scenario file or simulate
     defaul: 'all`
                         
   -s START, --start START
   
         start date for import period: `1 day ago`, `1_january_2020`
-        `1 hours ago`, `1_year_and_1_month_ago`, ...
+        `1 hours ago`, `1_year_and_1_month_ago_00:00`, ...
         default = `100_years_ago`
 ```python
      python app.py --start 2_years_ago
 ```
          
-  --erase 
-    
-    clear database before start 
-                  
   -e END, --end END   
   
         end of period: 1_day_ago`, `1_january_2020`, `1 year ago`...
@@ -117,51 +107,105 @@ PM2 is a daemon process manager that will help you manage and keep your applicat
     U, us	microseconds
     N	nanoseconds
 
+# Scenarios described in YAML files
 
-# Diagrams    
-![alt text](https://github.com/tumikosha/go_parrot/blob/master/DOCS/html/images/import_process.png)
+Script loads orders and users from different sources(aka points)  
+ Yaml file consists of points of different types:
+ [csv_orders, csv_users, mongo_orders, mongo_users]    
+    Example:    
+ ```
+points:
+  source_orders_1:       # just the name of point, redefine it as you wish
+    type: csv_orders  
+    uri: data/orders_xxx.csv        # path to file
+    dtype:             # field formats as  pandas.dataFrame DTYPE
+      user_id: S       # means this this field is string
+  source_u1:
+    type: csv_users
+    uri: data/users_xxx.csv
+    dtype:
+      user_id: S
+      phone_number: S
+      created_at: S
+      updated_at: S
+```
+Source points:
+
+    type: csv_orders - the source of csv file with orders
+    type: csv_users - the source of csv file with users
+    type:orders_mongo_source - mongo db collection with orders
+    type:users_mongo_source - mongo db collection with ousers
     
-![alt text](https://github.com/tumikosha/go_parrot/blob/master/DOCS/html/images/Entity_Relationship_Diagram1.png?raw=true)
+Destination points:    
+    
+    type: mongo_dest  - output mongo db with collections 
+    type: csv_dest - file with full_orders (joined order and user)
+    
+   
+   See `config.yaml` for detailed example
+
+
+# Error management
+Need to redefine following methods in ETL.py
+```
+def is_user_correct(user) -> (bool, str):
+	# check if subj is corect
+	if user.get('updated_at', None) is None:
+		return False, "updated_at is None"
+	return True, "Ok"
+
+
+def is_order_correct(order) -> (bool, str):
+	# check if subj is corect
+	if order.get('updated_at', None) is None:
+		return False, "updated_at is None"
+	if order['status'] is None:
+		return False, "status is None"
+
+	return True, "Ok"
+
+
+def is_full_order_correct(full_order) -> (bool, str):
+	# check if subj is corect
+	if full_order['updated_at'] is None:
+		return False, "updated_at is None"
+	if full_order['user_updated_at'] is None:
+		return False, "user_updated_at is None"
+	if full_order['status'] is None:
+		return False, "status is None"
+	if full_order['status'] != full_order['status']: # means if status is `nan`
+		return False, "status is nan"
+	return True, "Ok"
+```
+incorrect records goes to tables described in YAML file 
+    error_users: error_users 
+    error_orders: error_orders
+    error_full_orders: error_full_orders
+
+
+# Full example of destination point
+```
+  destination_final:
+    type: mongo_dest
+    uri: 'mongodb://127.0.0.1:57017/admin'
+    db_name: final
+    table_name: full_orders  # default: full_orders
+    filtered_users_table_name: 'users' # default: None
+    filtered_orders_table_name: 'orders' # default: None
+    error_users: error_users
+    error_orders: error_orders
+    error_full_orders: error_full_orders
+    unfiltered_orders_table_name: unfiltered_orders # default: None
+    unfiltered_users_table_name: unfiltered_users # default: None
+    erase_point_on_start: True # remove all records on start # default: False
+```
+
 
 # Requirements
 Anaconda / Python 3.7.4
 
 Mongodb 4  on port 57017 is required and started in docker container in `run.sh`
 
-App creates database `go_parrot`
-
-    `go_parrot.order` - table/collection with orders
-    
-    `go_parrot.customers`  - table/collection with users
-    
-    go_parrot.customers['is_empty'] = True if order refers to user without description
-    
-tables linked by fields: go_parrot.order['user_id'] ----> go_parrot.customers['_id']
-
-
-cron service scans `data/` every 5min and try to import only records with
-
-    `updated_at` > max(updated_at) - TIME_DELTA
-    
-    where  TIME_DELTA- configurable parameter (0 sec by default)
-    
-            max(updated_at) - calculated from db
-
-In event based systems, the order of events may be disturbed in a small range (1 min?)
-
-TIME_DELTA parameter solves this problem
-
-in code it looks like:
-```
-    mask = (df['updated_at'] > (start_moment - config.TIME_DELTA)) & (df['updated_at'] <= end_moment)
-    batch = df.loc[mask] # records filtered to window 
-```
-
- see TIME_DELTA in config.py
- ```diff
-+ I recommend to use TIME_DELTA = "24 hours ago" to be extra safe
-    or you can just import all files one time a day
-``` 
 
  
 ----------------------------------------------------------------

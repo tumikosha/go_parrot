@@ -3,6 +3,8 @@ import pymongo
 import config
 import numpy as np
 import datetime, dateparser
+import ETL
+import sys
 
 db = None
 client = None
@@ -96,27 +98,6 @@ def mention_user(user_id):
 
 	except Exception as e:
 		pass  # it is ok. this user already exists
-
-
-def update_order(order):
-	"""
-	Check if it is a fresh order and write it to db
-	:param order: dictionary with fields
-	:return: STATUS_INSERTED | STATUS_REPLACED | STATUS_SKIPPED
-	"""
-	order['_id'] = order['id']
-	old_order = db.orders.find_one({'_id': order['id']})
-	mention_user(order['user_id'])
-	if old_order is None:
-		db.orders.insert_one(order)
-		return STATUS_INSERTED
-	# this is absolutely new order
-	if old_order['updated_at'] is None:  old_order['updated_at'] = VERY_EARLY_DATE  # protect from None instead of date
-	if old_order.get('updated_at', VERY_EARLY_DATE) < order['updated_at']:
-		db.orders.save(order)
-		return STATUS_REPLACED
-	# if we are here, the order is old and no need to update
-	return STATUS_SKIPPED
 
 
 # def update_order(order):
@@ -304,32 +285,6 @@ def write_df_to_mongoDB(my_df, \
 	return
 
 
-def update_user(user, db=None, table=None):
-	"""
-	check if it is fresh order and write it to db
-	:param user: dictionary with fields
-	:return: STATUS_INSERTED | STATUS_REPLACED | STATUS_SKIPPED
-	"""
-	user['_id'] = user['user_id']
-	user['is_empty'] = False
-	if user.get('user_updated_at', None) is not None:
-		user['updated_at'] = user.get('user_updated_at', None)
-		del user['user_updated_at']
-
-	old_user = db[table].find_one({'_id': user['user_id']})
-	if old_user is None:
-		db[table].insert_one(user)
-		return STATUS_INSERTED
-	# this is absolutely new order
-	# print(old_user['updated_at'], user['updated_at'])
-	if old_user['updated_at'] is None: old_user['updated_at'] = VERY_EARLY_DATE  # protect from None instead of date
-	if old_user.get('updated_at', VERY_EARLY_DATE) < user['updated_at']:
-		db[table].save(user)
-		return STATUS_REPLACED
-	# if we are here, the user is old and no need to update
-	return STATUS_SKIPPED
-
-
 def clear_point(point):
 	if point['erase_point_on_start']:
 		print("ERASING point ", point)
@@ -341,26 +296,32 @@ def clear_point(point):
 			db['full_orders'].remove({})
 
 
-def update_record(record, db=None, table=None):
+def update_record(record, point, db=None, table=None):
 	"""
 	Check if it is a fresh order and write it to db
 	:param record: dictionary with fields after ETL
 	:return: STATUS_INSERTED | STATUS_REPLACED | STATUS_SKIPPED
 	"""
-	old_record = db[table].find_one({'_id': record['_id']})
-	if old_record is None:
-		db[table].insert_one(record)
-		# this is absolutely new order
-		return STATUS_INSERTED
+	try:
+		record = ETL.replace_nan(record, record.keys(), None)  # ??
+		old_record = db[table].find_one({'_id': record['_id']})
+		if old_record is None:
+			db[table].insert_one(record)
+			# this is absolutely new order
+			return STATUS_INSERTED
 
-	if old_record['updated_at'] is None:
-		old_record['updated_at'] = VERY_EARLY_DATE  # protect from None instead of date
+		if old_record['updated_at'] is None:
+			old_record['updated_at'] = VERY_EARLY_DATE  # protect from None instead of date
 
-	if old_record.get('updated_at', VERY_EARLY_DATE) < record['updated_at']:
-		# overwrite if current record is later
-		db[table].save(record)
-		return STATUS_REPLACED
+		if old_record.get('updated_at', VERY_EARLY_DATE) < record['updated_at']:
+			# overwrite if current record is later
+			db[table].save(record)
+			return STATUS_REPLACED
 	# if we are here, the order is old and no need to update
+	except Exception as e:
+		print(str(e))
+
+		sys.exit()
 	return STATUS_SKIPPED
 
 
@@ -368,3 +329,78 @@ def point_connection(point):
 	client = pymongo.MongoClient(point['uri'])
 	db = client[point['db_name']]
 	return client, db
+
+
+def update_order(order, point, db=None, table=None):
+	"""
+	Check if it is a fresh order and write it to db
+	:param order: dictionary with fields
+	:return: STATUS_INSERTED | STATUS_REPLACED | STATUS_SKIPPED
+	"""
+	is_correct, error = ETL.is_order_correct(order)
+	if is_correct:
+		order = ETL.prepare_order(order)
+		return update_record(order, point, db=db, table=table)
+	else:
+		order = ETL.prepare_order(order)
+		order['error_info']= error
+		error_coll = point.get('error_orders', "error_orders")
+		db[error_coll].save(order)
+		return None
+
+
+def update_full_order(full_order, point, db=None, table=None):
+	"""
+	Check if it is a fresh order and write it to db
+	:param order: dictionary with fields
+	:return: STATUS_INSERTED | STATUS_REPLACED | STATUS_SKIPPED
+	"""
+	is_correct, error = ETL.is_full_order_correct(full_order)
+	if is_correct:
+		full_order = ETL.prepare_full_order(full_order)
+		return update_record(full_order, point, db=db, table=table)
+	else:
+		full_order = ETL.prepare_full_order(full_order)
+		full_order['error_info'] = error
+		error_coll = point.get('error_full_orders', "error_full_orders")
+		db[error_coll].save(full_order)
+		return None
+
+
+def update_user(user, point, db=None, table=None):
+	# user = ETL.prepare_user(user)
+	is_correct, error = ETL.is_user_correct(user)
+	if is_correct:
+		user = ETL.prepare_user(user)
+		return update_record(user, point, db=db, table=table)
+	else:
+		user = ETL.prepare_user(user)
+		user['error_info'] = error
+		error_coll = point.get('error_users', "error_users")
+		db[error_coll].save(user)
+		return None
+
+# def update_user(user, db=None, table=None):
+# 	"""
+# 	check if it is fresh order and write it to db
+# 	:param user: dictionary with fields
+# 	:return: STATUS_INSERTED | STATUS_REPLACED | STATUS_SKIPPED
+# 	"""
+# 	user['_id'] = user['user_id']
+# 	user['is_empty'] = False
+# 	if user.get('user_updated_at', None) is not None:
+# 		user['updated_at'] = user.get('user_updated_at', None)
+# 		del user['user_updated_at']
+#
+# 	old_user = db[table].find_one({'_id': user['user_id']})
+# 	if old_user is None:
+# 		db[table].insert_one(user)
+# 		return STATUS_INSERTED
+# 	# this is absolutely new order
+# 	# print(old_user['updated_at'], user['updated_at'])
+# 	if old_user['updated_at'] is None: old_user['updated_at'] = VERY_EARLY_DATE  # protect from None instead of date
+# 	if old_user.get('updated_at', VERY_EARLY_DATE) < user['updated_at']:
+# 		db[table].save(user)
+# 		return STATUS_REPLACED
+# 	# if we are here, the user is old and no need to update
+# 	return STATUS_SKIPPED
