@@ -228,3 +228,7 @@ Mongodb 4  on port 57017 is required and started in docker container in `run.sh`
 
  
 ----------------------------------------------------------------
+
+# TODO
+    point erasing (now works incorect)   
+    support for other RDBM points (Postgres, MySQL, etc...)    
