@@ -109,9 +109,28 @@ PM2 is a daemon process manager that will help you manage and keep your applicat
 
 # Scenarios described in YAML files
 
-Script loads orders and users from different sources(aka points)  
- Yaml file consists of points of different types:
- [csv_orders, csv_users, mongo_orders, mongo_users]    
+Script makes following steps:   
+
+    Step1. Loads orders and users from different sources(aka points) 
+    Step2. Filter & grouping 
+    Step3. Join  Orders and Users
+    Step4. write results to destination points
+
+ Yaml file consists of source and destination points of different types:
+ [csv_orders, csv_users, orders_mongo_source, users_mongo_source, csv_dest, mongo_dest]
+ 
+ Source points:
+
+    type: csv_orders - the source of csv file with orders
+    type: csv_users - the source of csv file with users
+    type:orders_mongo_source - mongo db collection with orders
+    type:users_mongo_source - mongo db collection with ousers
+    
+Destination points:    
+    
+    type: mongo_dest  - output mongo db with collections 
+    type: csv_dest - file with full_orders (joined order and user)   
+    
     Example:    
  ```
 points:
@@ -129,18 +148,6 @@ points:
       created_at: S
       updated_at: S
 ```
-Source points:
-
-    type: csv_orders - the source of csv file with orders
-    type: csv_users - the source of csv file with users
-    type:orders_mongo_source - mongo db collection with orders
-    type:users_mongo_source - mongo db collection with ousers
-    
-Destination points:    
-    
-    type: mongo_dest  - output mongo db with collections 
-    type: csv_dest - file with full_orders (joined order and user)
-    
    
    See `config.yaml` for detailed example
 

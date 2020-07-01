@@ -1,0 +1,21 @@
+# ignore bytecode
+*.pyc
+*.pyo
+
+**/__pycache__/
+
+# ingnore configurations
+**/config/
+
+# ignore logs
+**/data/
+**/logs/
+
+# ignore bins
+**/bin/
+
+# ignore IDEs
+**/.vscode/
+**/.idea/
+
+importer/*.log
