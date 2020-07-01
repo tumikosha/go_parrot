@@ -1,4 +1,16 @@
 # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
+__author__ = "Veaceslav Kunitki"
+__copyright__ = "Copyright 2020. Please inform me in case of usage"
+__credits__ = ["No credits"]
+__license__ = "MIT"
+__version__ = "11.111111111"
+__maintainer__ = "Veaceslav Kuntiki"
+__email__ = "tumikosha@gmail.com"
+__status__ = "Prototype"
+"""
+Utils for working with mongoDB
+"""
 import pymongo
 import config
 import numpy as np
@@ -88,136 +100,11 @@ STATUS_REPLACED = 1
 STATUS_SKIPPED = 2
 
 
-def mention_user(user_id):
-	"""if user found only in order file 'is_empty': True"""
-	try:
-		# insert user mentioned in order but without first_name and other fields
-		# db.customers.insert_one({'_id': user_id, 'user_id': user_id, 'updated_at': VERY_EARLY_DATE, 'is_empty': True})
-		db.customers.insert_one({'_id': user_id, 'user_id': user_id, 'updated_at': None, 'is_empty': True})
-	# db.customers.insert_one({'_id': user_id, 'user_id': user_id, 'is_empty': True})
-
-	except Exception as e:
-		pass  # it is ok. this user already exists
-
-
-# def update_order(order):
-# 	"""
-# 	Check if it is a fresh order and write it to db
-# 	:param order: dictionary with fields
-# 	:return: STATUS_INSERTED | STATUS_REPLACED | STATUS_SKIPPED
-# 	"""
-# 	order['_id'] = order['id']
-# 	old_order = db.orders.find_one({'_id': order['id']})
-# 	mention_user(order['user_id'])
-# 	if old_order is None:
-# 		db.orders.insert_one(order)
-# 		return STATUS_INSERTED
-# 	# this is absolutely new order
-# 	if old_order['updated_at'] is None:  old_order['updated_at'] = VERY_EARLY_DATE  # protect from None instead of date
-# 	if old_order.get('updated_at', VERY_EARLY_DATE) < order['updated_at']:
-# 		db.orders.save(order)
-# 		return STATUS_REPLACED
-# 	# if we are here, the order is old and no need to update
-# 	return STATUS_SKIPPED
-
-
-# def update_user(user):
-# 	"""
-# 	check if it is fresh order and write it to db
-# 	:param user: dictionary with fields
-# 	:return: STATUS_INSERTED | STATUS_REPLACED | STATUS_SKIPPED
-# 	"""
-# 	global db
-#
-# 	# db.customers.insert_one(order)
-# 	user['_id'] = user['user_id']
-# 	user['is_empty'] = False
-# 	old_user = db.customers.find_one({'_id': user['user_id']})
-# 	if old_user is None:
-# 		db.customers.insert_one(user)
-# 		return STATUS_INSERTED
-# 	# this is absolutely new order
-# 	# print(old_user['updated_at'], user['updated_at'])
-# 	if old_user['updated_at'] is None: old_user['updated_at'] = VERY_EARLY_DATE  # protect from None instead of date
-# 	if old_user.get('updated_at', VERY_EARLY_DATE) < user['updated_at']:
-# 		db.customers.save(user)
-# 		return STATUS_REPLACED
-# 	# if we are here, the user is old and no need to update
-# 	return STATUS_SKIPPED
-
-
-# user['_id'] = user['user_id']
-# db.customers.save(user)
-
-
-def order_range_in_db(db) -> (datetime.datetime, datetime.datetime):
-	""" maximal and minimal date of order in db
-		return: (min_date, max_date)
-	"""
-	if db.orders.count_documents({}) == 0:
-		# if db.orders.count({}) == 0:
-		return dateparser.parse("January 1th, 1973 00:00"), dateparser.parse("January 1th, 1973 00:00")
-	first_order = db.orders.find_one({}, sort=[('created_at', pymongo.ASCENDING)])
-	last_order = db.orders.find_one({}, sort=[('created_at', pymongo.DESCENDING)])
-	return first_order['created_at'], last_order['created_at']
-
 
 def clear_database():
 	db.orders.delete_many({})  # delete all orers
 	db.customers.delete_many({})  # delete all customers/users
 	print("ATTENTION! -----======DATABASE ERASED====-------")
-
-
-def digest():
-	total_orders = db.orders.count_documents({})
-	total_customers = db.customers.count_documents({})
-	total_empty = db.customers.count_documents({'is_empty': True})
-	return total_orders, total_customers, total_empty
-
-
-def order_range_in_db(db) -> (datetime.datetime, datetime.datetime):
-	""" maximal and minimal date of order in db
-		return: (min_date, max_date)
-	"""
-	if db.orders.count_documents({}) == 0:
-		return VERY_EARLY_DATE, VERY_EARLY_DATE
-	first_order = db.orders.find_one({}, sort=[('updated_at', pymongo.ASCENDING)])
-	last_order = db.orders.find_one({}, sort=[('updated_at', pymongo.DESCENDING)])
-	return first_order['updated_at'], last_order['updated_at']
-
-
-def customer_range_in_db(db) -> (datetime.datetime, datetime.datetime):
-	""" maximal and minimal date of customer in db
-		return: (min_date, max_date)
-	"""
-	if db.customers.count_documents({'is_empty': False}) == 0:
-		return VERY_EARLY_DATE, VERY_EARLY_DATE
-	first_customer = db.customers.find_one({'is_empty': False}, sort=[('updated_at', pymongo.ASCENDING)])
-	last_customer = db.customers.find_one({'is_empty': False}, sort=[('updated_at', pymongo.DESCENDING)])
-	return first_customer['updated_at'], last_customer['updated_at']
-
-
-def info():
-	"""show database digest"""
-	print("----------------mongodb digest----------------")
-	total_orders = db.orders.count_documents({})
-	total_customers = db.customers.count_documents({})
-	# total_empty = db.customers.count_documents({'first_name': {"$exists": False}})
-	total_empty = db.customers.count_documents({'is_empty': True})
-	print("Total records in DB.orders:", total_orders)
-	print("Total users in db.customers:", total_customers)
-	print("Empty users in db.customers:", total_empty)
-	first_dt, last_dt = order_range_in_db(db)
-	if first_dt == VERY_EARLY_DATE: first_dt = None
-	if last_dt == VERY_EARLY_DATE: last_dt = None
-
-	print("order range:", first_dt, " --->", last_dt)
-	customer_first_dt, customer_last_dt = customer_range_in_db(db)
-	if customer_first_dt == VERY_EARLY_DATE: customer_first_dt = None
-	if customer_last_dt == VERY_EARLY_DATE: customer_last_dt = None
-	print("customer range:", customer_first_dt, " --->", customer_last_dt)
-	print("-------------------------------")
-	return total_orders, total_customers, total_empty
 
 
 def write_df_to_mongoDB(my_df, \
@@ -326,6 +213,7 @@ def update_record(record, point, db=None, table=None):
 
 
 def point_connection(point):
+	"""return connection to dabase """
 	client = pymongo.MongoClient(point['uri'])
 	db = client[point['db_name']]
 	return client, db
@@ -380,27 +268,3 @@ def update_user(user, point, db=None, table=None):
 		db[error_coll].save(user)
 		return None
 
-# def update_user(user, db=None, table=None):
-# 	"""
-# 	check if it is fresh order and write it to db
-# 	:param user: dictionary with fields
-# 	:return: STATUS_INSERTED | STATUS_REPLACED | STATUS_SKIPPED
-# 	"""
-# 	user['_id'] = user['user_id']
-# 	user['is_empty'] = False
-# 	if user.get('user_updated_at', None) is not None:
-# 		user['updated_at'] = user.get('user_updated_at', None)
-# 		del user['user_updated_at']
-#
-# 	old_user = db[table].find_one({'_id': user['user_id']})
-# 	if old_user is None:
-# 		db[table].insert_one(user)
-# 		return STATUS_INSERTED
-# 	# this is absolutely new order
-# 	# print(old_user['updated_at'], user['updated_at'])
-# 	if old_user['updated_at'] is None: old_user['updated_at'] = VERY_EARLY_DATE  # protect from None instead of date
-# 	if old_user.get('updated_at', VERY_EARLY_DATE) < user['updated_at']:
-# 		db[table].save(user)
-# 		return STATUS_REPLACED
-# 	# if we are here, the user is old and no need to update
-# 	return STATUS_SKIPPED
