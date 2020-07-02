@@ -178,7 +178,9 @@ class FullOrder(Order):
 		return json.dumps(d, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
 	def parse(full_order): # -> FullOrder
-		# from flat row dict to object
+		""" 	from flat row dict to object
+				extract User fields to separate object
+		"""
 		u_dict, o_dict = Record.by_prefix("user_", full_order)
 		fields = ["user_id", "first_name", "last_name", "merchant_id", "phone_number"]
 		u_dict2, o_dict2 = Record.by_key_list(fields, o_dict)
@@ -232,5 +234,5 @@ if __name__ == "__main__":
 	# user = User({'first_name': "Gibon"})
 	# print(user.to_row())
 	# full_order = FullOrder(full_order_1)
-	# print(full_order.toJSON())
-	# pprint(full_order.to_row())
+	print(fo.toJSON())
+	pprint(fo.to_row())
