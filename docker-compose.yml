@@ -1,7 +1,7 @@
 version: "3"
 services:
   db:
-    build: importer/data/mongo/
+    build: mongo/
     ports:
       - 57017:27017
   importer:

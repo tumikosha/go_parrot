@@ -206,7 +206,8 @@ def update_order(order, point, db=None, table=None):
 def update_efull_order(e_full_order, point, db=None, table=None):
 	old_record = db[table].find_one({'_id': e_full_order.__dict__.get('_id', None)})
 	if old_record is None:
-		db[table].insert_one(e_full_order.to_row())
+		row = e_full_order.to_row()
+		db[table].insert_one(row)
 		# this is absolutely new order
 		return STATUS_INSERTED
 
