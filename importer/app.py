@@ -431,20 +431,20 @@ def process_yaml(cfg_path, start=db_util.VERY_EARLY_DATE, end=dateparser.parse("
 			if source['erase_point_on_start'] == True:
 				db_util.clear_point(source)
 
-		# SAVE full_orders
+		# SAVE full_orders  # entity
 		full_orders['_id'] = full_orders['id']
 		df_to_mongo(full_orders, source['uri'], source['db_name'], source['table_name'], source,
 					func=db_util.update_full_order,
 					desc="write `full_orders` to mongo " + source_name)
 
-		# save FILTERED ORDERS
+		# save FILTERED ORDERS # entity
 		filtered_orders_table_name = source.get('filtered_orders_table_name', None)
 		if filtered_orders_table_name is not None:
 			df_orders['_id'] = df_orders['id']
 			df_to_mongo(df_orders, source['uri'], source['db_name'], filtered_orders_table_name, source,
 						func=db_util.update_order,
 						desc="write `" + filtered_orders_table_name + "` to mongo " + source_name)
-		# SAVE filtered users
+		# SAVE filtered users # entity
 		filtered_users_table_name = source.get('filtered_users_table_name', None)
 		if filtered_users_table_name is not None:
 			df_users['_id'] = df_users['user_id']
@@ -456,7 +456,7 @@ def process_yaml(cfg_path, start=db_util.VERY_EARLY_DATE, end=dateparser.parse("
 			df_to_mongo(df_users, source['uri'], source['db_name'], filtered_users_table_name, source,
 						func=db_util.update_user,
 						desc="write `users` to mongo " + source_name)
-		# SAVE unfltered orders
+		# SAVE unfltered orders # entity
 		unfiltered_orders_table_name = source.get('unfiltered_orders_table_name', None)
 		if unfiltered_orders_table_name is not None:
 			df_orders_unfiltered['_id'] = df_orders_unfiltered['id'] + "==" + df_orders_unfiltered[
@@ -465,9 +465,9 @@ def process_yaml(cfg_path, start=db_util.VERY_EARLY_DATE, end=dateparser.parse("
 			df_orders_unfiltered = NaT(df_orders_unfiltered, 'created_at')
 			df_to_mongo(df_orders_unfiltered, source['uri'], source['db_name'], unfiltered_orders_table_name, source,
 						# func=db_util.update_record,
-						func=db_util.update_record,
+						func=db_util.update_order,
 						desc="write `" + unfiltered_orders_table_name + "` to mongo " + source_name)
-		# SAVE unfltered users
+		# SAVE unfltered users # entity
 		unfiltered_users_table_name = source.get('unfiltered_users_table_name', None)
 		if unfiltered_orders_table_name is not None:
 			df_users_unfiltered['_id'] = df_users_unfiltered['user_id'] + "==" + df_users_unfiltered[
@@ -475,7 +475,8 @@ def process_yaml(cfg_path, start=db_util.VERY_EARLY_DATE, end=dateparser.parse("
 			df_users_unfiltered = NaT(df_users_unfiltered, 'updated_at')
 			df_users_unfiltered = NaT(df_users_unfiltered, 'created_at')
 			df_to_mongo(df_users_unfiltered, source['uri'], source['db_name'], unfiltered_users_table_name, source,
-						func=db_util.update_record,
+						# func=db_util.update_record,
+						func=db_util.update_user,
 						desc="write `" + unfiltered_users_table_name + "` to mongo " + source_name)
 	if full_orders is not None:
 		return len(full_orders)
@@ -528,7 +529,7 @@ if __name__ == "__main__":
 
 	parser.add_argument('-y', '--yaml', type=str,
 						help="YAML file with sources descriptions",
-						default='cron.yaml')
+						default='config.yaml')
 
 	parser.add_argument('--erase', dest='erase', action='store_true', default=False)
 

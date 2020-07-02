@@ -3,6 +3,7 @@
 	ETL functions
 """
 import pandas as pd
+import entities as entity
 
 
 def prepare_user(user) -> dict:
@@ -38,6 +39,8 @@ def prepare_users_df(df)-> pd.DataFrame:
 
 
 def is_user_correct(user) -> (bool, str):
+	e_user = entity.User(user)
+	e_user.have_errors()
 	# check if subj is corect. incorrect users forwards to users_error_table
 	if user.get('updated_at', None) is None:
 		return False, "updated_at is None"
@@ -56,16 +59,21 @@ def is_order_correct(order) -> (bool, str):
 
 def is_full_order_correct(full_order) -> (bool, str):
 	# check if subj is corect. incorrect full_orders forwards to error_table
-	if full_order['updated_at'] is None:
-		return False, "updated_at is None"
-	if full_order['user_updated_at'] is None:
-		return False, "user_updated_at is None"
-	if full_order['status'] is None:
-		return False, "status is None"
-	if full_order['status'] != full_order['status']: # means if status is `nan`
-		return False, "status is nan"
+	# e_full_order = entity.FullOrder(full_order)
+	e_full_order = entity.FullOrder.parse(full_order)
+	is_err, reason = e_full_order.have_errors() # TODO parse all fields
+	if is_err:
+		return False, reason
+	# if full_order['updated_at'] is None:
+	# 	return False, "updated_at is None"
+	# if full_order['user_updated_at'] is None:
+	# 	return False, "user_updated_at is None"
+	# if full_order['status'] is None:
+	# 	return False, "status is None"
+	# if full_order['status'] != full_order['status']: # means if status is `nan`
+	# 	return False, "status is nan"
 
-	return True, "Ok"
+	return True, None
 
 
 def NaT(df, column)-> pd.DataFrame:

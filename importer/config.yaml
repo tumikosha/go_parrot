@@ -61,7 +61,7 @@ points:
     uri: 'mongodb://127.0.0.1:57017/admin'
     db_name: final
     table_name: full_orders  # default: full_orders
-#    filtered_users_table_name: 'users' # default: None
+    filtered_users_table_name: 'users' # default: None
     filtered_orders_table_name: 'orders' # default: None
     error_users: error_users
     error_orders: error_orders

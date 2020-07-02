@@ -165,38 +165,9 @@ Example:
 
 
 # Error management
-Need to redefine following methods in ETL.py
-```
-def is_user_correct(user) -> (bool, str):
-	# check if subj is corect
-	if user.get('updated_at', None) is None:
-		return False, "updated_at is None"
-	return True, "Ok"
 
-
-def is_order_correct(order) -> (bool, str):
-	# check if subj is corect
-	if order.get('updated_at', None) is None:
-		return False, "updated_at is None"
-	if order['status'] is None:
-		return False, "status is None"
-
-	return True, "Ok"
-
-
-def is_full_order_correct(full_order) -> (bool, str):
-	# check if subj is corect
-	if full_order['updated_at'] is None:
-		return False, "updated_at is None"
-	if full_order['user_updated_at'] is None:
-		return False, "user_updated_at is None"
-	if full_order['status'] is None:
-		return False, "status is None"
-	if full_order['status'] != full_order['status']: # means if status is `nan`
-		return False, "status is nan"
-	return True, "Ok"
-```
 incorrect records goes to tables described in YAML file 
+    
     error_users: error_users 
     error_orders: error_orders
     error_full_orders: error_full_orders

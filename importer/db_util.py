@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
 __author__ = "Veaceslav Kunitki"
 __copyright__ = "Copyright 2020. Please inform me in case of usage"
 __credits__ = ["No credits"]
@@ -17,6 +16,11 @@ import numpy as np
 import datetime, dateparser
 import ETL
 import sys
+import entities as entity
+from entities import Record
+from entities import Order
+from entities import FullOrder
+from entities import User
 
 db = None
 client = None
@@ -100,76 +104,10 @@ STATUS_REPLACED = 1
 STATUS_SKIPPED = 2
 
 
-
 def clear_database():
 	db.orders.delete_many({})  # delete all orers
 	db.customers.delete_many({})  # delete all customers/users
 	print("ATTENTION! -----======DATABASE ERASED====-------")
-
-
-def write_df_to_mongoDB(my_df, \
-						database_name='mydatabasename', \
-						collection_name='mycollectionname',
-						server='localhost', \
-						mongodb_port=27017, \
-						chunk_size=100):
-	# """
-	# This function take a list and create a collection in MongoDB (you should
-	# provide the database name, collection, port to connect to the remoete database,
-	# server of the remote database, local port to tunnel to the other machine)
-	#
-	# ---------------------------------------------------------------------------
-	# Parameters / Input
-	#    my_list: the list to send to MongoDB
-	#    database_name:  database name
-	#
-	#    collection_name: collection name (to create)
-	#    server: the server of where the MongoDB database is hosted
-	#        Example: server = '132.434.63.86'
-	#    this_machine_port: local machine port.
-	#        For example: this_machine_port = '27017'
-	#    remote_port: the port where the database is operating
-	#        For example: remote_port = '27017'
-	#    chunk_size: The number of items of the list that will be send at the
-	#        some time to the database. Default is 100.
-	#
-	# Output
-	#    When finished will print "Done"
-	# ----------------------------------------------------------------------------
-	# FUTURE modifications.
-	# 1. Write to SQL
-	# 2. Write to csv
-	# ----------------------------------------------------------------------------
-	# 30/11/2017: Rafael Valero-Fernandez. Documentation
-	# """
-
-	# To connect
-	# import os
-	# import pandas as pd
-	# import pymongo
-	# from pymongo import MongoClient
-
-	client = pymongo.MongoClient('localhost', int(mongodb_port))
-	db = client[database_name]
-	collection = db[collection_name]
-	# To write
-	collection.delete_many({})  # Destroy the collection
-	# aux_df=aux_df.drop_duplicates(subset=None, keep='last') # To avoid repetitions
-	my_list = my_df.to_dict('records')
-	l = len(my_list)
-	ran = range(l)
-	steps = ran[chunk_size::chunk_size]
-	steps.extend([l])
-
-	# Inser chunks of the dataframe
-	i = 0
-	for j in steps:
-		print(j)
-		collection.insert_many(my_list[i:j])  # fill de collection
-		i = j
-
-	print('Done')
-	return
 
 
 def clear_point(point):
@@ -207,7 +145,33 @@ def update_record(record, point, db=None, table=None):
 	# if we are here, the order is old and no need to update
 	except Exception as e:
 		print(str(e))
+	return STATUS_SKIPPED
 
+
+def update_e_record(e_record, point, db=None, table=None):
+	"""
+	Check if it is a fresh order and write it to db
+	:param record: dictionary with fields after ETL
+	:return: STATUS_INSERTED | STATUS_REPLACED | STATUS_SKIPPED
+	"""
+	try:
+		# record = ETL.replace_nan(record, record.keys(), None)  # ??
+		old_record = db[table].find_one({'_id': e_record.__dict__.get('_id', None)})
+		if old_record is None:
+			db[table].insert_one(e_record.to_row(prefix=""))
+			# this is absolutely new order
+			return STATUS_INSERTED
+
+		if old_record['updated_at'] is None:
+			old_record['updated_at'] = VERY_EARLY_DATE  # protect from None instead of date
+
+		if old_record.get('updated_at', VERY_EARLY_DATE) < e_record.__dict__.get('updated_at', VERY_EARLY_DATE):
+			# overwrite if current record is later
+			db[table].save(e_record.to_row())
+			return STATUS_REPLACED
+	# if we are here, the order is old and no need to update
+	except Exception as e:
+		print(str(e))
 		sys.exit()
 	return STATUS_SKIPPED
 
@@ -225,16 +189,36 @@ def update_order(order, point, db=None, table=None):
 	:param order: dictionary with fields
 	:return: STATUS_INSERTED | STATUS_REPLACED | STATUS_SKIPPED
 	"""
-	is_correct, error = ETL.is_order_correct(order)
-	if is_correct:
-		order = ETL.prepare_order(order)
-		return update_record(order, point, db=db, table=table)
+	e_order = Order(order)
+	have_errors, error = e_order.have_errors()
+	if not have_errors:
+		# return update_e_record(e_order, point, db=db, table=table)
+		return e_order.update(point, db=db, table=table)
 	else:
-		order = ETL.prepare_order(order)
-		order['error_info']= error
+		# order = ETL.prepare_order(order)
+		# order['error_info'] = error
+		e_order.set('error_info', error)
 		error_coll = point.get('error_orders', "error_orders")
-		db[error_coll].save(order)
+		db[error_coll].save(e_order.to_row(prefix=""))
 		return None
+
+
+def update_efull_order(e_full_order, point, db=None, table=None):
+	old_record = db[table].find_one({'_id': e_full_order.__dict__.get('_id', None)})
+	if old_record is None:
+		db[table].insert_one(e_full_order.to_row())
+		# this is absolutely new order
+		return STATUS_INSERTED
+
+	if old_record['updated_at'] is None:
+		old_record['updated_at'] = VERY_EARLY_DATE  # protect from None instead of date
+
+	if old_record.get('updated_at', VERY_EARLY_DATE) < e_full_order.updated_at:
+		# overwrite if current record is later
+		db[table].save(e_full_order.to_row())
+		return STATUS_REPLACED
+
+	return STATUS_SKIPPED
 
 
 def update_full_order(full_order, point, db=None, table=None):
@@ -243,28 +227,36 @@ def update_full_order(full_order, point, db=None, table=None):
 	:param order: dictionary with fields
 	:return: STATUS_INSERTED | STATUS_REPLACED | STATUS_SKIPPED
 	"""
-	is_correct, error = ETL.is_full_order_correct(full_order)
-	if is_correct:
-		full_order = ETL.prepare_full_order(full_order)
-		return update_record(full_order, point, db=db, table=table)
+	full_order = ETL.prepare_full_order(full_order)
+	e_full_order = FullOrder.parse(full_order)
+	have_errors, error = e_full_order.have_errors()
+	if not have_errors:
+		# old_record = db[table].find_one({'_id': e_full_order.__dict__.get('_id', None)})
+		return update_efull_order(e_full_order, point, db=db, table=table)
+	# return update_record(full_order, point, db=db, table=table)
 	else:
-		full_order = ETL.prepare_full_order(full_order)
-		full_order['error_info'] = error
+		# full_order = ETL.prepare_full_order(full_order)
+		# full_order['error_info'] = error
+		e_full_order.set('error_info', error)
+		updated_at = str(e_full_order.get('updated_at', ""))
+		_id = e_full_order.get('id', "") + "==" + str(updated_at)
+		e_full_order.set('_id', _id)
 		error_coll = point.get('error_full_orders', "error_full_orders")
-		db[error_coll].save(full_order)
+		db[error_coll].save(e_full_order.to_row())
 		return None
 
 
 def update_user(user, point, db=None, table=None):
 	# user = ETL.prepare_user(user)
-	is_correct, error = ETL.is_user_correct(user)
-	if is_correct:
-		user = ETL.prepare_user(user)
-		return update_record(user, point, db=db, table=table)
+	e_user = User(user)
+	have_errors, error = e_user.have_errors()
+	# is_correct, error = ETL.is_user_correct(user)
+	if not have_errors:
+		# user = ETL.prepare_user(user)
+		return update_e_record(e_user, point, db=db, table=table)
+	# return update_record(user, point, db=db, table=table)
 	else:
-		user = ETL.prepare_user(user)
-		user['error_info'] = error
+		e_user.set('error_info', error)
 		error_coll = point.get('error_users', "error_users")
 		db[error_coll].save(user)
 		return None
-
